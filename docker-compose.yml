@@ -1,0 +1,14 @@
+version: "3"
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: ./docker/db-deployment/mysql/Dockerfile
+    ports:
+      - "3306:3306"
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/db-deployment/mysql/Dockerfile
+    ports:
+      - "8080:8080"
