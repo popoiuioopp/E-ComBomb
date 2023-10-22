@@ -9,6 +9,6 @@ services:
   backend:
     build:
       context: .
-      dockerfile: ./docker/db-deployment/mysql/Dockerfile
+      dockerfile: ./docker/cart-craft-backend/Dockerfile
     ports:
       - "8080:8080"

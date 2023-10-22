@@ -7,6 +7,8 @@ RUN go mod download && go mod verify
 
 COPY ./backend/ /app/
 
-RUN go build -v -o /usr/local/bin/app ./...
+RUN go build -v -o /app/ ./...
 
-CMD ["app"]
+EXPOSE 8080
+
+CMD ["./craft-cart"]
