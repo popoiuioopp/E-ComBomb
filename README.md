@@ -4,13 +4,11 @@ An e-commerce platform built with Go (using the Gin framework) for the backend a
 
 ## Table of Contents
 
-- Getting Started
-- Prerequisites
-- Installation
-- Running the Project
-- Components
-- License
-- Contribution
+- [Getting Started](#getting-started)
+- [Prerequisites](#prerequisites)
+- [Running the Project](#running-the-project)
+- [Components](#components)
+- [License](#license)
 
 ## Getting Started
 
@@ -20,48 +18,45 @@ Prerequisites
 - Go
 - Gin (This will be installed with the go mod commands provided below)
 
-## Installation
-
-Navigate to the backend directory:
-
-```bash
-cd projectname/backend
-```
-
-Download the necessary Go modules:
-
-```bash
-go mod download
-```
-
 ## Running the Project
 
-To run the backend:
+### To run the project on docker
+
+```
+docker-compose up -d
+```
+
+### To run backend and frontend locally
+
+- backend
 
 ```bash
 cd backend
 go run main.go
 ```
 
-Frontend:
+- frontend
 
-- The frontend is currently a work in progress. Instructions will be updated once it's ready.
+```bash
+cd frontend
+bun install
+bun dev
+```
+
+- database
+  - Currently solely running database is still in progress.
 
 ## Components
 
 ### Backend:
 
-Developed with Go and the Gin framework.
+Developed with Go and the Gin framework.  
 Handles all the API endpoints, database connections, and business logic.
 
 ### Frontend:
 
-Currently under development.
-Once completed, it will provide a user interface for browsing products, managing carts, and making purchases.
-
-## Contribution
-
-Feel free to fork the project and submit pull requests. Ensure that any new code follows the existing patterns and styles, and that all tests pass before submitting a PR.
+Developed with NextJS and BunJS.  
+Handles server side and client side rendered interactable page for users.
 
 ## License
 
