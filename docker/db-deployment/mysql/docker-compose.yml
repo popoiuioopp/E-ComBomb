@@ -1,0 +1,17 @@
+version: "3"
+services:
+  mysql:
+    build:
+      context: ../../../
+      dockerfile: ./docker/db-deployment/mysql/Dockerfile
+    ports:
+      - "3306:3306"
+    networks:
+      - cart-craft-network
+    volumes:
+      - mysqldata:/var/lib/mysql
+networks:
+  cart-craft-network:
+    driver: bridge
+volumes:
+  mysqldata:
