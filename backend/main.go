@@ -1,15 +1,17 @@
 package main
 
 import (
-	"craft-cart/controller"
+	"craft-cart/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	r := gin.Default()
+	router := gin.New()
 
-	r.GET("/healthcheck", controller.HealthCheck)
+	routes.Common(router)
+	routes.UserRoutes(router)
+    routes.AuthRoutes(router)
 
-	r.Run()
+	router.Run()
 }
