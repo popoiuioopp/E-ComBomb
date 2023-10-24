@@ -1,6 +1,6 @@
-# Craft Cart
+# E-ComBomb
 
-An e-commerce platform built with Go (using the Gin framework) for the backend and a frontend (currently under development).
+An e-commerce platform built with Go (using the Gin framework) for the backend and Javascript (using NextJS framework with BunJS) for the frontend.
 
 ## Table of Contents
 
@@ -15,8 +15,9 @@ An e-commerce platform built with Go (using the Gin framework) for the backend a
 These instructions will help you set up the project on your local machine for development and testing purposes.
 Prerequisites
 
-- Go
-- Gin (This will be installed with the go mod commands provided below)
+- [Go](https://go.dev/doc/install)
+- [Bun](https://bun.sh/docs/installation)
+- [Docker](https://docs.docker.com/engine/install/)
 
 ## Running the Project
 
@@ -44,7 +45,11 @@ bun dev
 ```
 
 - database
-  - Currently solely running database is still in progress.
+
+```bash
+cd docker/db-deployment/mysql/
+docker-compose up -d
+```
 
 ## Components
 
@@ -55,7 +60,7 @@ Handles all the API endpoints, database connections, and business logic.
 
 ### Frontend:
 
-Developed with NextJS and BunJS.  
+Developed with NextJS using BunJS run time.  
 Handles server side and client side rendered interactable page for users.
 
 ## License

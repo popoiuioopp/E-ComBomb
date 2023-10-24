@@ -1,7 +1,7 @@
 package main
 
 import (
-	"craft-cart/routes"
+	"e-combomb/routes"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +11,7 @@ func main() {
 
 	routes.Common(router)
 	routes.UserRoutes(router)
-    routes.AuthRoutes(router)
+	routes.AuthRoutes(router)
 
 	router.Run()
 }

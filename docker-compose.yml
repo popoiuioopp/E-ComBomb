@@ -7,27 +7,27 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - cart-craft-network
+      - e-combomb-network
     volumes:
       - mysqldata:/var/lib/mysql
   backend:
     build:
       context: .
-      dockerfile: ./docker/cart-craft-backend/Dockerfile
+      dockerfile: ./docker/e-combomb-backend/Dockerfile
     ports:
       - "8080:8080"
     networks:
-      - cart-craft-network
+      - e-combomb-network
   frontend:
     build:
       context: .
-      dockerfile: ./docker/cart-craft-frontend/Dockerfile
+      dockerfile: ./docker/e-combomb-frontend/Dockerfile
     ports:
       - "3000:3000"
     networks:
-      - cart-craft-network
+      - e-combomb-network
 networks:
-  cart-craft-network:
+  e-combomb-network:
     driver: bridge
 volumes:
   mysqldata:
