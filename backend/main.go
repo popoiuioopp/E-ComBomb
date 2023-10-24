@@ -1,7 +1,7 @@
 package main
 
 import (
-	"craft-cart/controller"
+	"e-combomb/controller"
 
 	"github.com/gin-gonic/gin"
 )

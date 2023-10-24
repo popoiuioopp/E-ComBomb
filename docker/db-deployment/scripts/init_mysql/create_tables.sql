@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS cartCraftDB;
-USE cartCraftDB;
+CREATE DATABASE IF NOT EXISTS eCombombDB;
+USE eCombombDB;
 
 -- Users table
 CREATE TABLE Users (

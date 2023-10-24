@@ -11,4 +11,4 @@ RUN go build -v -o /app/ ./...
 
 EXPOSE 8080
 
-CMD ["./craft-cart"]
+CMD ["./e-combomb"]

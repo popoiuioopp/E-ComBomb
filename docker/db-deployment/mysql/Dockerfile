@@ -3,7 +3,7 @@ FROM mysql:8.0
 
 # Set any environment variables if necessary
 ENV MYSQL_ROOT_PASSWORD=my-secret-pw
-ENV MYSQL_DATABASE=cartCraftDB
+ENV MYSQL_DATABASE=eCombombDB
 
 # Copy initialization scripts into the container
 COPY ./docker/db-deployment/scripts/init_mysql/ /docker-entrypoint-initdb.d/
