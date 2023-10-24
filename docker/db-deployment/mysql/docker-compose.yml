@@ -7,11 +7,11 @@ services:
     ports:
       - "3306:3306"
     networks:
-      - cart-craft-network
+      - e-combomb-network
     volumes:
       - mysqldata:/var/lib/mysql
 networks:
-  cart-craft-network:
+  e-combomb-network:
     driver: bridge
 volumes:
   mysqldata:

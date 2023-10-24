@@ -1,4 +1,4 @@
-module craft-cart
+module e-combomb
 
 go 1.21.3
 
