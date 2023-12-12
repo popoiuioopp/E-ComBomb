@@ -1,8 +1,6 @@
 package models
 
 import (
-	"fmt"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -27,8 +25,7 @@ func CheckPasswordHash(username, password string) bool {
 }
 
 func CheckPassword(username, password string) bool {
-	user, exists := InMemoryUsers[username]
-	fmt.Println(user)
+	_, exists := InMemoryUsers[username]
 	if !exists {
 		return false
 	}

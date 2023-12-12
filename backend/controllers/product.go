@@ -2,20 +2,24 @@ package controllers
 
 import (
 	"e-combomb/models"
+	"e-combomb/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-var Products []models.Product
-
 func AddProduct() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var newProduct models.Product
-		if err := c.ShouldBindJSON(&newProduct); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "bad request body"})
+		var requestBody models.AddProductRequestBody
+		if err := c.ShouldBindJSON(&requestBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "bad request body"})
+			return
 		}
-		Products = append(Products, newProduct)
+
+		if err := services.AddProduct(requestBody); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot register product"})
+			return
+		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "successfully registered a product"})
 	}
@@ -23,6 +27,6 @@ func AddProduct() gin.HandlerFunc {
 
 func GetAllProducts() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"products": Products})
+		c.JSON(http.StatusOK, gin.H{"products": services.GetAllProducts()})
 	}
 }
