@@ -7,17 +7,25 @@ import (
 	"github.com/google/uuid"
 )
 
-func AddProduct(productRequestBody models.AddProductRequestBody) error {
-	newproduct := models.Product{
-		Id:          uuid.New().String(),
+type ProductService struct {
+	productRepository *repositories.ProductRepositry
+}
+
+func NewProductService(productRepository *repositories.ProductRepositry) *ProductService {
+	return &ProductService{productRepository: productRepository}
+}
+
+func (s *ProductService) AddProduct(productRequestBody models.AddProductRequestBody) error {
+	newProduct := models.Product{
+		Id:          uuid.NewString(),
 		Name:        productRequestBody.Name,
 		Description: productRequestBody.Description,
 		Price:       productRequestBody.Price,
 	}
 
-	return repositories.AddProduct(newproduct)
+	return s.productRepository.AddProduct(newProduct)
 }
 
-func GetAllProducts() []models.Product {
-	return repositories.AllProducts
+func (s *ProductService) GetAllProducts() []models.Product {
+	return s.productRepository.GetAllProducts()
 }

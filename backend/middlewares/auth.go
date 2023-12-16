@@ -7,7 +7,15 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-func SessionAuthMiddleware(store *sessions.CookieStore) gin.HandlerFunc {
+type AuthMiddleWare struct {
+	Store *sessions.CookieStore
+}
+
+func NewAuthMiddleWare(store *sessions.CookieStore) *AuthMiddleWare {
+	return &AuthMiddleWare{Store: store}
+}
+
+func (am *AuthMiddleWare) SessionAuthMiddleware(store *sessions.CookieStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// Retrieve the session by the name
 		session, err := store.Get(c.Request, "session-name")

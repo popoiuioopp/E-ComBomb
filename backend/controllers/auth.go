@@ -2,13 +2,21 @@ package controllers
 
 import (
 	"e-combomb/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
 
-func Signup() gin.HandlerFunc {
+type AuthController struct {
+}
+
+func NewAuthController() *AuthController {
+	return &AuthController{}
+}
+
+func (ac *AuthController) Signup() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var newUser models.User
 		if err := c.ShouldBindJSON(&newUser); err != nil {
@@ -39,7 +47,7 @@ func Signup() gin.HandlerFunc {
 	}
 }
 
-func Login(store *sessions.CookieStore) gin.HandlerFunc {
+func (ac *AuthController) Login(store *sessions.CookieStore) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var user models.User
 
@@ -55,6 +63,7 @@ func Login(store *sessions.CookieStore) gin.HandlerFunc {
 
 		session, err := store.Get(c.Request, "session-name")
 		if err != nil {
+			fmt.Println("Error retrieving session:", err)
 			c.JSON(http.StatusForbidden, gin.H{"message": "cannot get session from the store login"})
 			return
 		}

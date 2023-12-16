@@ -12,7 +12,7 @@ var (
 )
 
 func init() {
-	store = sessions.NewCookieStore([]byte("พี่สาวเชฟนิ้วก้อยแห่ง PikkuuStudio"))
+	store = sessions.NewCookieStore([]byte("some-secret-key"))
 }
 
 func main() {

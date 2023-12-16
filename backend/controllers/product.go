@@ -8,7 +8,15 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AddProduct() gin.HandlerFunc {
+type ProductController struct {
+	Service *services.ProductService
+}
+
+func NewProductController(service *services.ProductService) *ProductController {
+	return &ProductController{Service: service}
+}
+
+func (pc *ProductController) AddProduct() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var requestBody models.AddProductRequestBody
 		if err := c.ShouldBindJSON(&requestBody); err != nil {
@@ -16,7 +24,7 @@ func AddProduct() gin.HandlerFunc {
 			return
 		}
 
-		if err := services.AddProduct(requestBody); err != nil {
+		if err := pc.Service.AddProduct(requestBody); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "cannot register product"})
 			return
 		}
@@ -25,8 +33,8 @@ func AddProduct() gin.HandlerFunc {
 	}
 }
 
-func GetAllProducts() gin.HandlerFunc {
+func (pc *ProductController) GetAllProducts() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"products": services.GetAllProducts()})
+		c.JSON(http.StatusOK, gin.H{"products": pc.Service.GetAllProducts()})
 	}
 }
