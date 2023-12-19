@@ -12,8 +12,9 @@ An e-commerce platform built with Go (using the Gin framework) for the backend a
 
 ## Getting Started
 
-These instructions will help you set up the project on your local machine for development and testing purposes.
-Prerequisites
+These instructions will help you set up the project on your local machine for development and testing purposes. 
+
+## Prerequisites
 
 - [Go](https://go.dev/doc/install)
 - [Bun](https://bun.sh/docs/installation)
