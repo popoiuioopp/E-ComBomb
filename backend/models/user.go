@@ -2,13 +2,15 @@ package models
 
 import (
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 var InMemoryUsers = make(map[string]User)
 
 type User struct {
-	Username string
-	Password string
+	gorm.Model
+	Username string `gorm:"unique;not null"`
+	Password string `gorm:"not null"`
 }
 
 func HashPassword(password string) (string, error) {
