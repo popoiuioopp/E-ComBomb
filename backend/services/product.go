@@ -3,8 +3,6 @@ package services
 import (
 	"e-combomb/models"
 	"e-combomb/repositories"
-
-	"github.com/google/uuid"
 )
 
 type ProductService struct {
@@ -15,17 +13,24 @@ func NewProductService(productRepository *repositories.ProductRepositry) *Produc
 	return &ProductService{productRepository: productRepository}
 }
 
-func (s *ProductService) AddProduct(productRequestBody models.AddProductRequestBody) error {
+func (s *ProductService) AddProduct(productRequestBody models.AddProductRequestBody, userId uint) error {
 	newProduct := models.Product{
-		Id:          uuid.NewString(),
 		Name:        productRequestBody.Name,
 		Description: productRequestBody.Description,
 		Price:       productRequestBody.Price,
+		User_id:     userId,
 	}
 
-	return s.productRepository.AddProduct(newProduct)
+	return s.productRepository.AddProduct(&newProduct)
 }
 
-func (s *ProductService) GetAllProducts() []models.Product {
-	return s.productRepository.GetAllProducts()
+func (s *ProductService) GetAllProducts() ([]models.ProductInterface, error) {
+	products, err := s.productRepository.GetAllProducts()
+	if err != nil {
+		return []models.ProductInterface{}, err
+	}
+
+	productInterfaces := models.MapProductsToProductInterfaces(products)
+
+	return productInterfaces, nil
 }

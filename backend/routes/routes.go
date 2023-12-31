@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"e-combomb/bootstrap"
 	"e-combomb/controllers"
 	"e-combomb/middlewares"
 	"e-combomb/repositories"
@@ -10,21 +11,23 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-func SetupRoutes(router *gin.Engine, store *sessions.CookieStore) {
+func SetupRoutes(router *gin.Engine, store *sessions.CookieStore, app *bootstrap.Application) {
 
 	// Repositories
-	productRepository := repositories.NewProductRepository()
+	productRepository := repositories.NewProductRepository(app.Database)
+	authRepository := repositories.NewAuthRepository(app.Database)
 
 	// Services
 	productService := services.NewProductService(productRepository)
+	authService := services.NewAuthService(authRepository)
 
 	// Middlewares
 	authMiddleware := middlewares.NewAuthMiddleWare(store)
 
 	// Controllers
 	commonController := controllers.NewCommonController()
-	authController := controllers.NewAuthController()
-	productController := controllers.NewProductController(productService)
+	authController := controllers.NewAuthController(authService)
+	productController := controllers.NewProductController(productService, store)
 
 	Common(router, commonController)
 	AuthRoutes(router, store, authController)
