@@ -1,26 +1,29 @@
 package repositories
 
-import "e-combomb/models"
+import (
+	"e-combomb/models"
 
-var AllProducts []models.Product
+	"gorm.io/gorm"
+)
 
 type ProductRepositry struct {
+	DB *gorm.DB
 }
 
-func NewProductRepository() *ProductRepositry {
-	return &ProductRepositry{}
+func NewProductRepository(database *gorm.DB) *ProductRepositry {
+	return &ProductRepositry{DB: database}
 }
 
 func (pr *ProductRepositry) NewProductRepository() *ProductRepositry {
 	return &ProductRepositry{}
 }
 
-func (pr *ProductRepositry) AddProduct(newProduct models.Product) error {
-	AllProducts = append(AllProducts, newProduct)
-
-	return nil
+func (pr *ProductRepositry) AddProduct(product *models.Product) error {
+	return pr.DB.Create(product).Error
 }
 
-func (pr *ProductRepositry) GetAllProducts() []models.Product {
-	return AllProducts
+func (pr *ProductRepositry) GetAllProducts() ([]models.Product, error) {
+	var products []models.Product
+	result := pr.DB.Find(&products)
+	return products, result.Error
 }
