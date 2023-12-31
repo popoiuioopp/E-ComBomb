@@ -1,6 +1,7 @@
 package main
 
 import (
+	"e-combomb/bootstrap"
 	"e-combomb/routes"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +19,13 @@ func init() {
 func main() {
 	router := gin.New()
 
-	routes.SetupRoutes(router, store)
+	app := bootstrap.App()
+
+	env := app.Env
+
+	gin.SetMode(env.GinMode)
+
+	routes.SetupRoutes(router, store, &app)
 
 	router.Run()
 }
