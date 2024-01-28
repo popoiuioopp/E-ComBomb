@@ -17,14 +17,15 @@ type Env struct {
 }
 
 func NewEnv() *Env {
-	env := Env{}
-	viper.SetConfigFile(".env")
+	viper.AutomaticEnv() // Read from environment variables first
 
-	err := viper.ReadInConfig()
+	viper.SetConfigFile(".env")
+	err := viper.MergeInConfig() // Merge in the values from .env file, if present
 	if err != nil {
-		log.Fatal("Can't find the file .env : ", err)
+		log.Printf("Warning: No .env file found or error in reading it: %v\n", err)
 	}
 
+	env := Env{}
 	err = viper.Unmarshal(&env)
 	if err != nil {
 		log.Fatal("Environment can't be loaded: ", err)

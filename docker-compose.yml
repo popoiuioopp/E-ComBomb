@@ -18,6 +18,11 @@ services:
       - "8080:8080"
     networks:
       - e-combomb-network
+    environment:
+      - DB_HOST=mysql
+    env_file:
+      - ./backend/.env
+
   frontend:
     build:
       context: .

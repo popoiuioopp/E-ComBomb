@@ -23,6 +23,7 @@ func NewMySQLDatabase(env *Env) *gorm.DB {
 	dbName := env.DBName
 
 	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort, dbName)
+	fmt.Println(mysqlURI)
 	db, err := gorm.Open(mysql.Open(mysqlURI), &gorm.Config{})
 
 	if err != nil {

@@ -1,0 +1,14 @@
+{
+    "folders": [
+      {
+        "path": "."
+      },
+      {
+        "path": "frontend"
+      }
+    ],
+    "settings": {
+      "typescript.tsdk": "frontend/node_modules/typescript/lib"
+    }
+  }
+  
