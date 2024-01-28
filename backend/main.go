@@ -18,6 +18,7 @@ func init() {
 
 func main() {
 	router := gin.New()
+	apiRoutes := router.Group("/api")
 
 	app := bootstrap.App()
 
@@ -25,7 +26,7 @@ func main() {
 
 	gin.SetMode(env.GinMode)
 
-	routes.SetupRoutes(router, store, &app)
+	routes.SetupRoutes(apiRoutes, store, &app)
 
 	router.Run()
 }
