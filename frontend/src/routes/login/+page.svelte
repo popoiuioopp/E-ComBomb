@@ -19,7 +19,7 @@
 	<h1 class="main-header">E-Combomb</h1>
 	<div class="form-container">
 		<form on:submit={handleSubmit}>
-			<h1 class="form-header">Register</h1>
+			<h1 class="form-header">Login</h1>
 			<div class="form-group">
 				<input id="username" type="text" placeholder="username" bind:value={username} />
 			</div>
@@ -28,18 +28,9 @@
 				<input id="password" type="password" placeholder="password" bind:value={password} />
 			</div>
 
-			<div class="form-group">
-				<input
-					id="confirm-password"
-					type="password"
-					placeholder="confirm password"
-					bind:value={confirmPassword}
-				/>
-			</div>
-
-			<div class="signup-prompt">
-				<p>Have an account?</p>
-				<a href="/signup">sign in</a>
+			<div class="login-prompt">
+				<p>Forgot your password?</p>
+				<a href="/login">click here</a>
 			</div>
 
 			<button type="submit">Submit</button>
@@ -97,32 +88,32 @@
 		outline: none;
 	}
 
-	.signup-prompt {
+	.login-prompt {
 		text-align: center;
 		margin-bottom: 15px;
 	}
 
-	.signup-prompt p,
-	.signup-prompt a {
+	.login-prompt p,
+	.login-prompt a {
 		display: inline;
 		margin-right: 5px;
 	}
 
-	.signup-prompt a {
+	.login-prompt a {
 		text-decoration: none;
 		color: blue;
 	}
 
-	.signup-prompt a:hover {
+	.login-prompt a:hover {
 		text-decoration: underline;
 	}
 
-	.signup-prompt p {
+	.login-prompt p {
 		display: inline;
 		margin-right: 5px;
 	}
 
-	.signup-prompt a {
+	.login-prompt a {
 		display: inline;
 		text-decoration: none;
 	}
