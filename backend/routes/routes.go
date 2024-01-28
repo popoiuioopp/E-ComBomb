@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/sessions"
 )
 
-func SetupRoutes(router *gin.Engine, store *sessions.CookieStore, app *bootstrap.Application) {
+func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *bootstrap.Application) {
 
 	// Repositories
 	productRepository := repositories.NewProductRepository(app.Database)
@@ -34,16 +34,16 @@ func SetupRoutes(router *gin.Engine, store *sessions.CookieStore, app *bootstrap
 	Product(router, store, productController, authMiddleware)
 }
 
-func Common(incomingRoutes *gin.Engine, controller *controllers.CommonController) {
+func Common(incomingRoutes *gin.RouterGroup, controller *controllers.CommonController) {
 	incomingRoutes.GET("/healthcheck", controller.HealthCheck)
 }
 
-func AuthRoutes(router *gin.Engine, store *sessions.CookieStore, controller *controllers.AuthController) {
+func AuthRoutes(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.AuthController) {
 	router.POST("users/signup", controller.Signup())
 	router.POST("users/login", controller.Login(store))
 }
 
-func Product(router *gin.Engine, store *sessions.CookieStore, controller *controllers.ProductController, authMiddleware *middlewares.AuthMiddleWare) {
+func Product(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.ProductController, authMiddleware *middlewares.AuthMiddleWare) {
 	router.GET("product", controller.GetAllProducts())
 	router.POST("product", authMiddleware.SessionAuthMiddleware(store), controller.AddProduct())
 }
