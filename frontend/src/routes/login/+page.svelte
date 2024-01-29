@@ -1,11 +1,35 @@
 <script>
 	import { colors } from '$lib/colors';
+	import { ENDPOINTS } from '$lib/endpoints';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	let username = '';
 	let password = '';
-	let confirmPassword = '';
+	let errorMessage = '';
 
-	const handleSubmit = async () => {};
+	async function handleLogin() {
+		errorMessage = '';
+
+		try {
+			const response = await fetch(ENDPOINTS.loginUser, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username, password }),
+				credentials: 'include'
+			});
+
+			if (!response.ok) {
+				throw new Error(await response.text());
+			}
+
+			goto('/');
+		} catch (error) {
+			console.error('Login error:', error);
+			errorMessage = 'Login failed. Please try again.';
+		}
+	}
 
 	onMount(() => {
 		document.documentElement.style.setProperty('--primary-orange-color', colors.primaryOrange);
@@ -15,28 +39,30 @@
 	});
 </script>
 
-<form on:submit={handleSubmit}>
-	<h1 class="main-header">E-Combomb</h1>
-	<div class="form-container">
-		<form on:submit={handleSubmit}>
-			<h1 class="form-header">Login</h1>
-			<div class="form-group">
-				<input id="username" type="text" placeholder="username" bind:value={username} />
-			</div>
+<h1 class="main-header">E-Combomb</h1>
+<div class="form-container">
+	<form on:submit|preventDefault={handleLogin}>
+		<h1 class="form-header">Login</h1>
+		<div class="form-group">
+			<input id="username" type="text" placeholder="username" bind:value={username} />
+		</div>
 
-			<div class="form-group">
-				<input id="password" type="password" placeholder="password" bind:value={password} />
-			</div>
+		<div class="form-group">
+			<input id="password" type="password" placeholder="password" bind:value={password} />
+		</div>
 
-			<div class="login-prompt">
-				<p>Forgot your password?</p>
-				<a href="/login">click here</a>
-			</div>
+		{#if errorMessage}
+			<div class="error-message">{errorMessage}</div>
+		{/if}
 
-			<button type="submit">Submit</button>
-		</form>
-	</div>
-</form>
+		<div class="login-prompt">
+			<p>Forgot your password?</p>
+			<a href="/login">click here</a>
+		</div>
+
+		<button type="submit">Submit</button>
+	</form>
+</div>
 
 <style>
 	:global(body) {
@@ -116,6 +142,13 @@
 	.login-prompt a {
 		display: inline;
 		text-decoration: none;
+	}
+
+	.error-message {
+		text-align: center;
+		color: red;
+		margin-top: 10px;
+		margin-bottom: 10px;
 	}
 
 	button[type='submit'] {
