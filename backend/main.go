@@ -4,6 +4,7 @@ import (
 	"e-combomb/bootstrap"
 	"e-combomb/routes"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
@@ -18,12 +19,14 @@ func init() {
 
 func main() {
 	router := gin.New()
+
+	// Enable CORS for all origins
+	router.Use(cors.Default())
+
 	apiRoutes := router.Group("/api")
 
 	app := bootstrap.App()
-
 	env := app.Env
-
 	gin.SetMode(env.GinMode)
 
 	routes.SetupRoutes(apiRoutes, store, &app)
