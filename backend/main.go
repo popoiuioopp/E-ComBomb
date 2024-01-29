@@ -3,6 +3,7 @@ package main
 import (
 	"e-combomb/bootstrap"
 	"e-combomb/routes"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -20,8 +21,16 @@ func init() {
 func main() {
 	router := gin.New()
 
-	// Enable CORS for all origins
-	router.Use(cors.Default())
+	// Custom CORS configuration
+	config := cors.Config{
+		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+	router.Use(cors.New(config))
 
 	apiRoutes := router.Group("/api")
 
