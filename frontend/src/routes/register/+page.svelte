@@ -1,11 +1,49 @@
 <script>
 	import { colors } from '$lib/colors';
+	import { ENDPOINTS } from '$lib/endpoints';
+	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	let username = '';
 	let password = '';
 	let confirmPassword = '';
+	let errorMessage = '';
 
-	const handleSubmit = async () => {};
+	const handleSubmit = async () => {
+		errorMessage = '';
+		if (password !== confirmPassword) {
+			errorMessage = "Password doesn't match";
+			return;
+		}
+
+		try {
+			console.log('ENDPOINTS.registerUser', ENDPOINTS.registerUser);
+			const response = await fetch(ENDPOINTS.registerUser, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					username: username,
+					password: password
+				})
+			});
+
+			if (response.status === 302) {
+				goto('/');
+			} else if (response.ok) {
+				const data = await response.json();
+				console.log('Registration Successful', data);
+				goto('/');
+			} else {
+				const errorData = await response.json();
+				errorMessage = errorData;
+				console.error('Registration failed:', errorData);
+			}
+		} catch (error) {
+			errorMessage = 'An error occurred during registration. Please try again.';
+			console.error('An error occurred during registration:', error);
+		}
+	};
 
 	onMount(() => {
 		document.documentElement.style.setProperty('--primary-orange-color', colors.primaryOrange);
@@ -15,35 +53,37 @@
 	});
 </script>
 
-<form on:submit={handleSubmit}>
+<form on:submit|preventDefault={handleSubmit}>
 	<h1 class="main-header">E-Combomb</h1>
 	<div class="form-container">
-		<form on:submit={handleSubmit}>
-			<h1 class="form-header">Register</h1>
-			<div class="form-group">
-				<input id="username" type="text" placeholder="username" bind:value={username} />
-			</div>
+		<h1 class="form-header">Register</h1>
+		<div class="form-group">
+			<input id="username" type="text" placeholder="username" bind:value={username} />
+		</div>
 
-			<div class="form-group">
-				<input id="password" type="password" placeholder="password" bind:value={password} />
-			</div>
+		<div class="form-group">
+			<input id="password" type="password" placeholder="password" bind:value={password} />
+		</div>
 
-			<div class="form-group">
-				<input
-					id="confirm-password"
-					type="password"
-					placeholder="confirm password"
-					bind:value={confirmPassword}
-				/>
-			</div>
+		<div class="form-group">
+			<input
+				id="confirm-password"
+				type="password"
+				placeholder="confirm password"
+				bind:value={confirmPassword}
+			/>
+		</div>
 
-			<div class="signup-prompt">
-				<p>Have an account?</p>
-				<a href="/signup">sign in</a>
-			</div>
+		{#if errorMessage}
+			<div class="error-message">{errorMessage}</div>
+		{/if}
 
-			<button type="submit">Submit</button>
-		</form>
+		<div class="signup-prompt">
+			<p>Have an account?</p>
+			<a href="/login">sign in</a>
+		</div>
+
+		<button type="submit">Submit</button>
 	</div>
 </form>
 
@@ -125,6 +165,13 @@
 	.signup-prompt a {
 		display: inline;
 		text-decoration: none;
+	}
+
+	.error-message {
+		text-align: center;
+		color: red;
+		margin-top: 10px;
+		margin-bottom: 10px;
 	}
 
 	button[type='submit'] {
