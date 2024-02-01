@@ -1,8 +1,6 @@
 <script>
-	import { colors } from '$lib/colors';
 	import { ENDPOINTS } from '$lib/endpoints';
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
 	let username = '';
 	let password = '';
 	let confirmPassword = '';
@@ -44,13 +42,6 @@
 			console.error('An error occurred during registration:', error);
 		}
 	};
-
-	onMount(() => {
-		document.documentElement.style.setProperty('--primary-orange-color', colors.primaryOrange);
-		document.documentElement.style.setProperty('--secondary-orange-color', colors.secondaryOrange);
-		document.documentElement.style.setProperty('--light-yellow-color', colors.lightYellow);
-		document.documentElement.style.setProperty('--placeholder-grey-color', colors.placeholderGrey);
-	});
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
@@ -88,8 +79,8 @@
 </form>
 
 <style>
-	:global(body) {
-		background-color: var(--primary-orange-color);
+	body {
+		background-color: #ea722f;
 	}
 
 	.main-header {
@@ -121,7 +112,7 @@
 	input[type='password'] {
 		width: 100%;
 		padding: 8px;
-		border: 1px solid var(--placeholder-grey-color);
+		border: 1px solid #ddd;
 		border-radius: 4px;
 		box-sizing: border-box;
 		transition:
@@ -131,8 +122,8 @@
 
 	input[type='text']:focus,
 	input[type='password']:focus {
-		border-color: var(--primary-orange-color);
-		background-color: var(--light-yellow-color);
+		border-color: #ea722f;
+		background-color: #fffbea;
 		box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.3);
 		outline: none;
 	}
@@ -178,13 +169,13 @@
 		width: 100%;
 		padding: 10px;
 		border: none;
-		background-color: var(--primary-orange-color);
+		background-color: #ea722f;
 		color: white;
 		border-radius: 4px;
 		cursor: pointer;
 	}
 
 	button[type='submit']:hover {
-		background-color: var(--secondary-orange-color);
+		background-color: #f5984c;
 	}
 </style>

@@ -1,7 +1,5 @@
 <script>
-	import { colors } from '$lib/colors';
 	import { ENDPOINTS } from '$lib/endpoints';
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	let username = '';
 	let password = '';
@@ -30,43 +28,38 @@
 			errorMessage = 'Login failed. Please try again.';
 		}
 	}
-
-	onMount(() => {
-		document.documentElement.style.setProperty('--primary-orange-color', colors.primaryOrange);
-		document.documentElement.style.setProperty('--secondary-orange-color', colors.secondaryOrange);
-		document.documentElement.style.setProperty('--light-yellow-color', colors.lightYellow);
-		document.documentElement.style.setProperty('--placeholder-grey-color', colors.placeholderGrey);
-	});
 </script>
 
-<h1 class="main-header">E-Combomb</h1>
-<div class="form-container">
-	<form on:submit|preventDefault={handleLogin}>
-		<h1 class="form-header">Login</h1>
-		<div class="form-group">
-			<input id="username" type="text" placeholder="username" bind:value={username} />
-		</div>
+<body>
+	<h1 class="main-header">E-Combomb</h1>
+	<div class="form-container">
+		<form on:submit|preventDefault={handleLogin}>
+			<h1 class="form-header">Login</h1>
+			<div class="form-group">
+				<input id="username" type="text" placeholder="username" bind:value={username} />
+			</div>
 
-		<div class="form-group">
-			<input id="password" type="password" placeholder="password" bind:value={password} />
-		</div>
+			<div class="form-group">
+				<input id="password" type="password" placeholder="password" bind:value={password} />
+			</div>
 
-		{#if errorMessage}
-			<div class="error-message">{errorMessage}</div>
-		{/if}
+			{#if errorMessage}
+				<div class="error-message">{errorMessage}</div>
+			{/if}
 
-		<div class="login-prompt">
-			<p>Forgot your password?</p>
-			<a href="/login">click here</a>
-		</div>
+			<div class="login-prompt">
+				<p>Forgot your password?</p>
+				<a href="/login">click here</a>
+			</div>
 
-		<button type="submit">Submit</button>
-	</form>
-</div>
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+</body>
 
 <style>
-	:global(body) {
-		background-color: var(--primary-orange-color);
+	body {
+		background-color: #ea722f;
 	}
 
 	.main-header {
@@ -98,7 +91,7 @@
 	input[type='password'] {
 		width: 100%;
 		padding: 8px;
-		border: 1px solid var(--placeholder-grey-color);
+		border: 1px solid #ddd;
 		border-radius: 4px;
 		box-sizing: border-box;
 		transition:
@@ -108,8 +101,8 @@
 
 	input[type='text']:focus,
 	input[type='password']:focus {
-		border-color: var(--primary-orange-color);
-		background-color: var(--light-yellow-color);
+		border-color: #ea722f;
+		background-color: #fffbea;
 		box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.3);
 		outline: none;
 	}
@@ -155,13 +148,13 @@
 		width: 100%;
 		padding: 10px;
 		border: none;
-		background-color: var(--primary-orange-color);
+		background-color: #ea722f;
 		color: white;
 		border-radius: 4px;
 		cursor: pointer;
 	}
 
 	button[type='submit']:hover {
-		background-color: var(--secondary-orange-color);
+		background-color: #f5984c;
 	}
 </style>
