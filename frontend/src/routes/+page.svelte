@@ -1,4 +1,5 @@
-<h1>Hello World!</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+	import ProductCard from '$lib/components/ProductCard.svelte';
+</script>
 
-<a href="/register"> Hello World </a>
+<ProductCard />
