@@ -1,10 +1,14 @@
-<script>
-	import { ENDPOINTS } from '$lib/endpoints';
+<script lang="ts">
+	import { ENDPOINTS } from '$lib/constants/endpoints';
 	import { goto } from '$app/navigation';
+	import { onDestroy, onMount } from 'svelte';
+	import { setBackgroundColor } from 'utils/backgroundUtils';
+
 	let username = '';
 	let password = '';
 	let confirmPassword = '';
 	let errorMessage = '';
+	let revertBackgroundColor: () => void = () => {};
 
 	const handleSubmit = async () => {
 		errorMessage = '';
@@ -42,10 +46,17 @@
 			console.error('An error occurred during registration:', error);
 		}
 	};
+
+	onMount(() => {
+		revertBackgroundColor = setBackgroundColor('#EA722F');
+	});
+
+	onDestroy(() => {
+		revertBackgroundColor();
+	});
 </script>
 
 <form on:submit|preventDefault={handleSubmit}>
-	<h1 class="main-header">E-Combomb</h1>
 	<div class="form-container">
 		<h1 class="form-header">Register</h1>
 		<div class="form-group">
@@ -79,17 +90,6 @@
 </form>
 
 <style>
-	body {
-		background-color: #ea722f;
-	}
-
-	.main-header {
-		color: white;
-		-webkit-text-stroke: 1px black;
-		font-size: 70px;
-		text-align: center;
-	}
-
 	.form-header {
 		text-align: center;
 		margin-top: 0px;
@@ -102,6 +102,7 @@
 		box-shadow: 0 0 0 3px rgba(var(--primary-orange-rgb), 0.3);
 		max-width: 300px;
 		margin: auto;
+		margin-top: 100px;
 	}
 
 	.form-group {
