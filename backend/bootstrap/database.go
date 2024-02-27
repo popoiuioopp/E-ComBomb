@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"e-combomb/models"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,6 +29,17 @@ func NewMySQLDatabase(env *Env) *gorm.DB {
 
 	if err != nil {
 		panic("Cannot instantiate database's connection")
+	}
+
+	// AutoMigrate with slice of models
+	models := []interface{}{
+		&models.Product{},
+		&models.User{},
+	}
+
+	err = db.AutoMigrate(models...)
+	if err != nil {
+		log.Fatal("failed to auto-migrate:", err)
 	}
 
 	return db

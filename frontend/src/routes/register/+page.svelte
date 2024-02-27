@@ -18,7 +18,6 @@
 		}
 
 		try {
-			console.log('ENDPOINTS.registerUser', ENDPOINTS.registerUser);
 			const response = await fetch(ENDPOINTS.registerUser, {
 				method: 'POST',
 				headers: {

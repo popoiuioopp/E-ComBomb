@@ -21,7 +21,7 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	productService := services.NewProductService(productRepository)
 	authService := services.NewAuthService(authRepository)
 
-	// Middlewares
+	// Middleware
 	authMiddleware := middlewares.NewAuthMiddleWare(store)
 
 	// Controllers

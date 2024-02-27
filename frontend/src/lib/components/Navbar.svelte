@@ -35,6 +35,9 @@
 	<a href="/" class="brand">E-Combomb</a>
 
 	<div class="logo-container">
+		<div class="add-product">
+			<button> Add product </button>
+		</div>
 		<div class="cart-logo">
 			<svelte:component this={Cart} />
 		</div>
@@ -125,5 +128,15 @@
 		border: none;
 		padding: 0;
 		cursor: pointer;
+	}
+
+	.navbar .add-product button {
+		padding: 10px 20px;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-weight: bold;
+		text-transform: uppercase;
+		transition: background-color 0.3s ease;
 	}
 </style>

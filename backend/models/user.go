@@ -7,8 +7,9 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"unique;not null"`
-	Password string `gorm:"not null"`
+	Username      string `gorm:"unique;not null"`
+	Password      string `gorm:"not null"`
+	Profile_image string `json:"profile_image"`
 }
 
 func HashPassword(password string) (string, error) {
