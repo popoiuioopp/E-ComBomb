@@ -39,7 +39,9 @@
 			<button> Add product </button>
 		</div>
 		<div class="cart-logo">
-			<svelte:component this={Cart} />
+			<a href="/cart">
+				<svelte:component this={Cart} />
+			</a>
 		</div>
 
 		<div class="user-logo-container" use:clickOutside>

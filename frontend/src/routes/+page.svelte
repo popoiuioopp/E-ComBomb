@@ -26,6 +26,15 @@
 	});
 </script>
 
-{#each allProducts as product}
-	<ProductCard {product} />
-{/each}
+<div class="product-cards-container">
+	{#each allProducts as product}
+		<ProductCard {product} />
+	{/each}
+</div>
+
+<style>
+	.product-cards-container {
+		display: flex;
+		flex-wrap: wrap;
+	}
+</style>
