@@ -7,4 +7,11 @@ export const ENDPOINTS = {
 
     // Products
     getAllProducts: `${API_BASE_URL}/api/product`,
+
+    // Cart
+    getCart: `${API_BASE_URL}/api/cart`,
+    addToCart: `${API_BASE_URL}/api/cart`,
+
+    // Order
+    placeOder: `${API_BASE_URL}/api/order`,
 };

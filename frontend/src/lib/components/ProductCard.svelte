@@ -1,5 +1,9 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { ENDPOINTS } from '$lib/constants/endpoints';
+
 	export let product: {
+		id: number;
 		name: string;
 		description: string;
 		price: number;
@@ -9,12 +13,36 @@
 	let placeholderImage =
 		'https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg';
 
-	function addToCart() {
+	async function addToCart() {
+		console.log(product);
+		try {
+			const response = await fetch(ENDPOINTS.addToCart, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ product_id: product.id, quantity: 1 }),
+				credentials: 'include'
+			});
 
+			if (!response.ok) {
+				throw new Error('Failed to add item to cart');
+			}
+
+			console.log('Item added to cart');
+		} catch (error) {
+			console.error('Add to cart error:', error);
+		}
 	}
 
-	function buyNow() {
+	async function buyNow() {
+		try {
+			await addToCart();
 
+			goto('/cart');
+		} catch (error) {
+			console.error('Buy now error:', error);
+		}
 	}
 </script>
 
