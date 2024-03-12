@@ -8,6 +8,14 @@
 
 	let placeholderImage =
 		'https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg';
+
+	function addToCart() {
+
+	}
+
+	function buyNow() {
+
+	}
 </script>
 
 <div class="product-card">
@@ -18,8 +26,8 @@
 	<p class="product-description">{product.description}</p>
 	<p class="product-price">{product.price} baht</p>
 	<div class="product-actions">
-		<button class="button-add-to-cart">Add to cart</button>
-		<button class="button-buy-now">Buy Now</button>
+		<button on:click={addToCart} class="button-add-to-cart">Add to cart</button>
+		<button on:click={buyNow} class="button-buy-now">Buy Now</button>
 	</div>
 </div>
 
