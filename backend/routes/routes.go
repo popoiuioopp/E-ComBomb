@@ -16,10 +16,12 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	// Repositories
 	productRepository := repositories.NewProductRepository(app.Database)
 	authRepository := repositories.NewAuthRepository(app.Database)
+	cartRepository := repositories.NewCartRepository(app.Database)
 
 	// Services
 	productService := services.NewProductService(productRepository)
 	authService := services.NewAuthService(authRepository)
+	cartService := services.NewCartService(cartRepository)
 
 	// Middleware
 	authMiddleware := middlewares.NewAuthMiddleWare(store)
@@ -28,10 +30,12 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	commonController := controllers.NewCommonController()
 	authController := controllers.NewAuthController(authService)
 	productController := controllers.NewProductController(productService, store)
+	cartController := controllers.NewCartController(cartService, store)
 
 	Common(router, commonController)
 	AuthRoutes(router, store, authController)
 	Product(router, store, productController, authMiddleware)
+	Cart(router, store, cartController, authMiddleware)
 }
 
 func Common(incomingRoutes *gin.RouterGroup, controller *controllers.CommonController) {
@@ -46,4 +50,8 @@ func AuthRoutes(router *gin.RouterGroup, store *sessions.CookieStore, controller
 func Product(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.ProductController, authMiddleware *middlewares.AuthMiddleWare) {
 	router.GET("product", controller.GetAllProducts())
 	router.POST("product", authMiddleware.SessionAuthMiddleware(store), controller.AddProduct())
+}
+
+func Cart(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.CartController, authMiddleware *middlewares.AuthMiddleWare) {
+	router.POST("cart", authMiddleware.SessionAuthMiddleware(store), controller.AddItemToCart())
 }

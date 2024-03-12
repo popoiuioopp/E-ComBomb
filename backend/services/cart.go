@@ -1,0 +1,24 @@
+package services
+
+import (
+	"e-combomb/models"
+	"e-combomb/repositories"
+)
+
+type CartService struct {
+	repo *repositories.CartRepository
+}
+
+func NewCartService(repo *repositories.CartRepository) *CartService {
+	return &CartService{repo: repo}
+}
+
+func (cs *CartService) AddItemToCart(userID uint, item models.CartItem) (models.CartItem, error) {
+	cart, err := cs.repo.GetOrCreateCart(userID)
+	if err != nil {
+		return models.CartItem{}, err
+	}
+
+	item.CartID = cart.ID
+	return cs.repo.AddItem(item)
+}

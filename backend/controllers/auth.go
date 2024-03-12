@@ -71,15 +71,6 @@ func (ac *AuthController) Login(store *sessions.CookieStore) gin.HandlerFunc {
 		session.Values["username"] = user.Username
 		session.Values["user_id"] = user.ID
 
-		// // Set session expiration
-		// session.Options = &sessions.Options{
-		// 	Path:     "/",
-		// 	MaxAge:   3600,
-		// 	HttpOnly: true,
-		// 	Secure:   true,
-		// 	SameSite: http.SameSiteLaxMode,
-		// }
-
 		err = session.Save(c.Request, c.Writer)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "cannot login"})
