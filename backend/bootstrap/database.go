@@ -37,6 +37,8 @@ func NewMySQLDatabase(env *Env) *gorm.DB {
 		&models.User{},
 		&models.Cart{},
 		&models.CartItem{},
+		&models.Order{},
+		&models.OrderItem{},
 	}
 
 	err = db.AutoMigrate(models...)

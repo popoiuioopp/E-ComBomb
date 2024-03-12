@@ -17,11 +17,13 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	productRepository := repositories.NewProductRepository(app.Database)
 	authRepository := repositories.NewAuthRepository(app.Database)
 	cartRepository := repositories.NewCartRepository(app.Database)
+	orderRepository := repositories.NewOrderRepository(app.Database)
 
 	// Services
 	productService := services.NewProductService(productRepository)
 	authService := services.NewAuthService(authRepository)
 	cartService := services.NewCartService(cartRepository)
+	orderService := services.NewOrderService(orderRepository, cartRepository)
 
 	// Middleware
 	authMiddleware := middlewares.NewAuthMiddleWare(store)
@@ -31,11 +33,13 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	authController := controllers.NewAuthController(authService)
 	productController := controllers.NewProductController(productService, store)
 	cartController := controllers.NewCartController(cartService, store)
+	orderController := controllers.NewOrderController(orderService, store)
 
 	Common(router, commonController)
 	AuthRoutes(router, store, authController)
 	Product(router, store, productController, authMiddleware)
 	Cart(router, store, cartController, authMiddleware)
+	Order(router, store, orderController, authMiddleware)
 }
 
 func Common(incomingRoutes *gin.RouterGroup, controller *controllers.CommonController) {
@@ -54,4 +58,8 @@ func Product(router *gin.RouterGroup, store *sessions.CookieStore, controller *c
 
 func Cart(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.CartController, authMiddleware *middlewares.AuthMiddleWare) {
 	router.POST("cart", authMiddleware.SessionAuthMiddleware(store), controller.AddItemToCart())
+}
+
+func Order(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.OrderController, authMiddleware *middlewares.AuthMiddleWare) {
+	router.POST("order", authMiddleware.SessionAuthMiddleware(store), controller.PlaceOrder())
 }

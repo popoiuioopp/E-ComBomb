@@ -47,3 +47,15 @@ func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, er
 
 	return cartItem, nil
 }
+
+func (cr *CartRepository) GetCartByUserID(userID uint) (*models.Cart, error) {
+	var cart models.Cart
+	if err := cr.DB.Where("user_id = ?", userID).Preload("Items").First(&cart).Error; err != nil {
+		return nil, err
+	}
+	return &cart, nil
+}
+
+func (cr *CartRepository) ClearCart(cartID uint) error {
+	return cr.DB.Where("cart_id = ?", cartID).Delete(&models.CartItem{}).Error
+}
