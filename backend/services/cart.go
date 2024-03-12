@@ -22,3 +22,7 @@ func (cs *CartService) AddItemToCart(userID uint, item models.CartItem) (models.
 	item.CartID = cart.ID
 	return cs.repo.AddItem(item)
 }
+
+func (cs *CartService) GetCartByUserID(userID uint) (*models.Cart, error) {
+	return cs.repo.GetCartByUserID(userID)
+}

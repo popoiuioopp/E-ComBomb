@@ -52,3 +52,27 @@ func (cc *CartController) AddItemToCart() gin.HandlerFunc {
 		c.JSON(http.StatusOK, result)
 	}
 }
+
+func (cc *CartController) GetCart() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, err := cc.store.Get(c.Request, "session-name")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve session"})
+			return
+		}
+
+		userID, ok := session.Values["user_id"].(uint)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
+			return
+		}
+
+		cart, err := cc.service.GetCartByUserID(userID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve cart"})
+			return
+		}
+
+		c.JSON(http.StatusOK, cart)
+	}
+}

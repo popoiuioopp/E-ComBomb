@@ -57,6 +57,7 @@ func Product(router *gin.RouterGroup, store *sessions.CookieStore, controller *c
 }
 
 func Cart(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.CartController, authMiddleware *middlewares.AuthMiddleWare) {
+	router.GET("cart", authMiddleware.SessionAuthMiddleware(store), controller.GetCart())
 	router.POST("cart", authMiddleware.SessionAuthMiddleware(store), controller.AddItemToCart())
 }
 
