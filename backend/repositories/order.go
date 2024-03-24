@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"e-combomb/models"
 	"fmt"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -36,15 +37,20 @@ func (repo *OrderRepository) CreateOrder(order *models.Order) error {
 		return fmt.Errorf("failed to retrieve last insert ID for order: %w", err)
 	}
 
-	// Insert the order items
-	// FIXME: BATCH OPERATION
+	// Prepare batch insert for order items
+	valueStrings := []string{}
+	valueArgs := []interface{}{}
 	for _, item := range order.Items {
-		itemInsertQuery := "INSERT INTO order_items (order_id, product_id, quantity, created_at, updated_at) VALUES (?, ?, ?, ?, ?)"
-		_, err := tx.Exec(itemInsertQuery, orderID, item.ProductID, item.Quantity, item.CreatedAt, item.UpdatedAt)
-		if err != nil {
-			tx.Rollback()
-			return fmt.Errorf("failed to insert order item: %w", err)
-		}
+		valueStrings = append(valueStrings, "(?, ?, ?, ?, ?)")
+		valueArgs = append(valueArgs, orderID, item.ProductID, item.Quantity, item.CreatedAt, item.UpdatedAt)
+	}
+
+	itemInsertQuery := fmt.Sprintf("INSERT INTO order_items (order_id, product_id, quantity, created_at, updated_at) VALUES %s",
+		strings.Join(valueStrings, ","))
+	_, err = tx.Exec(itemInsertQuery, valueArgs...)
+	if err != nil {
+		tx.Rollback()
+		return fmt.Errorf("failed to insert order items: %w", err)
 	}
 
 	return tx.Commit()
