@@ -9,28 +9,7 @@ services:
     networks:
       - e-combomb-network
     volumes:
-      - mysqldata:/var/lib/mysql
-  backend:
-    build:
-      context: .
-      dockerfile: ./docker/e-combomb-backend/Dockerfile
-    ports:
-      - "8080:8080"
-    networks:
-      - e-combomb-network
-    environment:
-      - DB_HOST=mysql
-    env_file:
-      - ./backend/.env
-
-  frontend:
-    build:
-      context: .
-      dockerfile: ./docker/e-combomb-frontend/Dockerfile
-    ports:
-      - "3000:3000"
-    networks:
-      - e-combomb-network
+      - ./docker/db-deployment/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
 networks:
   e-combomb-network:
     driver: bridge

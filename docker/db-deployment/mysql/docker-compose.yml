@@ -15,3 +15,4 @@ networks:
     driver: bridge
 volumes:
   mysqldata:
+    - ./docker/db-deployment/scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
