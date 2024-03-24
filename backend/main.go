@@ -36,6 +36,9 @@ func main() {
 
 	app := bootstrap.App()
 	env := app.Env
+
+	defer app.Database.Close()
+
 	gin.SetMode(env.GinMode)
 
 	routes.SetupRoutes(apiRoutes, store, &app)

@@ -1,25 +1,29 @@
 package repositories
 
 import (
+	"database/sql"
 	"e-combomb/models"
 
-	"gorm.io/gorm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type AuthRepository struct {
-	db *gorm.DB
+	db *sql.DB
 }
 
-func NewAuthRepository(db *gorm.DB) *AuthRepository {
+func NewAuthRepository(db *sql.DB) *AuthRepository {
 	return &AuthRepository{db: db}
 }
 
 func (ar *AuthRepository) CreateUser(user *models.User) error {
-	return ar.db.Create(user).Error
+	query := "INSERT INTO users (username, password) VALUES (?, ?);"
+	_, err := ar.db.Exec(query, user.Username, user.Password)
+	return err
 }
 
 func (ar *AuthRepository) GetUser(username string) (models.User, error) {
+	query := "SELECT id, username, password FROM users WHERE username = ?;"
 	var user models.User
-	err := ar.db.Where("username = ?", username).Find(&user).Error
+	err := ar.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Password)
 	return user, err
 }

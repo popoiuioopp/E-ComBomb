@@ -3,6 +3,7 @@ package controllers
 import (
 	"e-combomb/models"
 	"e-combomb/services"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -46,6 +47,7 @@ func (pc *ProductController) GetAllProducts() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		products, err := pc.Service.GetAllProducts()
 		if err != nil {
+			fmt.Println("getting products error", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"message": "there's error occurs on the server"})
 			return
 		}

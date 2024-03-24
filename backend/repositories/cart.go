@@ -1,61 +1,110 @@
 package repositories
 
 import (
+	"database/sql"
 	"e-combomb/models"
-	"errors"
 
-	"gorm.io/gorm"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type CartRepository struct {
-	DB *gorm.DB
+	DB *sql.DB
 }
 
-func NewCartRepository(db *gorm.DB) *CartRepository {
+func NewCartRepository(db *sql.DB) *CartRepository {
 	return &CartRepository{DB: db}
 }
 
 func (cr *CartRepository) GetOrCreateCart(userID uint) (*models.Cart, error) {
 	var cart models.Cart
-	if err := cr.DB.Where("user_id = ?", userID).First(&cart).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			// Cart does not exist, create a new one
-			cart = models.Cart{UserId: userID}
-			if err := cr.DB.Create(&cart).Error; err != nil {
-				return nil, err
-			}
-		} else {
+	query := "SELECT id, created_at, updated_at, deleted_at, user_id FROM carts WHERE user_id = ?"
+	err := cr.DB.QueryRow(query, userID).Scan(&cart.ID, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt, &cart.UserId)
+
+	switch {
+	case err == sql.ErrNoRows:
+		// Cart does not exist, create a new one
+		insertQuery := "INSERT INTO carts (user_id) VALUES (?)"
+		result, err := cr.DB.Exec(insertQuery, userID)
+		if err != nil {
 			return nil, err
 		}
+
+		cartID, err := result.LastInsertId()
+		if err != nil {
+			return nil, err
+		}
+
+		cart.ID = uint(cartID)
+		cart.UserId = userID
+
+	case err != nil:
+		return nil, err
 	}
+
 	return &cart, nil
 }
 
 func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, error) {
 	var existingItem models.CartItem
-	if err := cr.DB.Where("cart_id = ? AND product_id = ?", cartItem.CartID, cartItem.ProductID).First(&existingItem).Error; err == nil {
-		// Update existing item quantity
-		existingItem.Quantity += cartItem.Quantity
-		cr.DB.Save(&existingItem)
-		return existingItem, nil
-	}
+	query := "SELECT id, cart_id, product_id, quantity FROM cart_items WHERE cart_id = ? AND product_id = ?"
+	err := cr.DB.QueryRow(query, cartItem.CartID, cartItem.ProductID).Scan(&existingItem.ID, &existingItem.CartID, &existingItem.ProductID, &existingItem.Quantity)
 
-	// Create a new cart item
-	if err := cr.DB.Create(&cartItem).Error; err != nil {
+	if err == sql.ErrNoRows {
+		// Create a new cart item
+		insertQuery := "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)"
+		_, err := cr.DB.Exec(insertQuery, cartItem.CartID, cartItem.ProductID, cartItem.Quantity)
+		if err != nil {
+			return models.CartItem{}, err
+		}
+		return cartItem, nil
+	} else if err != nil {
 		return models.CartItem{}, err
 	}
 
-	return cartItem, nil
+	// Update existing item quantity
+	existingItem.Quantity += cartItem.Quantity
+	updateQuery := "UPDATE cart_items SET quantity = ? WHERE id = ?"
+	_, err = cr.DB.Exec(updateQuery, existingItem.Quantity, existingItem.ID)
+	if err != nil {
+		return models.CartItem{}, err
+	}
+
+	return existingItem, nil
 }
 
 func (cr *CartRepository) GetCartByUserID(userID uint) (*models.Cart, error) {
 	var cart models.Cart
-	if err := cr.DB.Where("user_id = ?", userID).Preload("Items").First(&cart).Error; err != nil {
+	cartQuery := "SELECT id, created_at, updated_at, deleted_at, user_id FROM carts WHERE user_id = ?"
+	err := cr.DB.QueryRow(cartQuery, userID).Scan(&cart.ID, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt, &cart.UserId)
+	if err != nil {
 		return nil, err
 	}
+
+	itemsQuery := "SELECT id, cart_id, product_id, quantity, created_at, updated_at, deleted_at FROM cart_items WHERE cart_id = ?"
+	rows, err := cr.DB.Query(itemsQuery, cart.ID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	cart.Items = []models.CartItem{}
+	for rows.Next() {
+		var item models.CartItem
+		if err := rows.Scan(&item.ID, &item.CartID, &item.ProductID, &item.Quantity, &item.CreatedAt, &item.UpdatedAt, &item.DeletedAt); err != nil {
+			return nil, err
+		}
+		cart.Items = append(cart.Items, item)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return &cart, nil
 }
 
 func (cr *CartRepository) ClearCart(cartID uint) error {
-	return cr.DB.Where("cart_id = ?", cartID).Delete(&models.CartItem{}).Error
+	query := "DELETE FROM cart_items WHERE cart_id = ?"
+	_, err := cr.DB.Exec(query, cartID)
+	return err
 }

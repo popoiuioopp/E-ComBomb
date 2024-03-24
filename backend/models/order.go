@@ -1,15 +1,24 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"database/sql"
+	"time"
+)
 
 type Order struct {
-	gorm.Model
-	UserID uint
-	Items  []OrderItem
+	ID        uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
+	UserID    uint
+	Items     []OrderItem
 }
 
 type OrderItem struct {
-	gorm.Model
+	ID        uint
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt sql.NullTime
 	OrderID   uint
 	ProductID uint
 	Product   Product

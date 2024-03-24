@@ -1,10 +1,12 @@
 package bootstrap
 
-import "gorm.io/gorm"
+import (
+	"database/sql"
+)
 
 type Application struct {
 	Env      *Env
-	Database *gorm.DB
+	Database *sql.DB
 }
 
 func App() Application {
