@@ -4,14 +4,23 @@
 	let placeholderImage =
 		'https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg';
 
+	interface Product {
+		id: number;
+		name: string;
+		price: number;
+		description: string;
+		image: string;
+	}
+
 	interface CartItem {
 		id: number;
-		productId: number;
+		product_id: number;
 		name: string;
 		description: string;
 		quantity: number;
 		price: number;
 		image: string | null;
+		product: Product;
 	}
 
 	let cart = null;
@@ -30,16 +39,14 @@
 
 			cart = await response.json();
 			cartItems = cart.Items;
-			console.log(cartItems);
 		} catch (error) {
 			console.error('Error fetching cart items:', error);
 		}
 	});
 
 	async function removeFromCart(productId: number) {
-		// Call backend to remove item from cart
 		try {
-			const response = await fetch(`http://localhost:8080/cart/${productId}`, {
+			const response = await fetch(`${ENDPOINTS.deleteItemFromCart}/${productId}`, {
 				method: 'DELETE',
 				credentials: 'include'
 			});
@@ -49,7 +56,7 @@
 			}
 
 			// Remove the item from the cartItems array
-			cartItems = cartItems.filter((item) => item.productId !== productId);
+			cartItems = cartItems.filter((item) => item.product_id !== productId);
 		} catch (error) {
 			console.error('Error removing item from cart:', error);
 		}
@@ -66,14 +73,14 @@
 	<div class="cart-items">
 		{#each cartItems as item (item.id)}
 			<div class="cart-item">
-				<img src={item.image || placeholderImage} alt={item.name} class="cart-item-image" />
+				<img src={item.product.image || placeholderImage} alt={item.name} class="cart-item-image" />
 				<div class="cart-item-details">
-					<h2>{item.name}</h2>
-					<p>{item.description}</p>
+					<h2>{item.product.name}</h2>
+					<p>{item.product.description}</p>
 					<p>Quantity: {item.quantity}</p>
-					<p>Price: {item.price} baht</p>
+					<p>Price: {item.product.price} baht</p>
 				</div>
-				<button on:click={() => removeFromCart(item.productId)}>Remove from Cart</button>
+				<button on:click={() => removeFromCart(item.product_id)}>Remove from Cart</button>
 			</div>
 		{/each}
 	</div>

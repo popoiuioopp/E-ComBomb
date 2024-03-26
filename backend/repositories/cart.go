@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"e-combomb/models"
+	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -54,10 +55,12 @@ func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, er
 		insertQuery := "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)"
 		_, err := cr.DB.Exec(insertQuery, cartItem.CartID, cartItem.ProductID, cartItem.Quantity)
 		if err != nil {
+			fmt.Println("HelloWorld1")
 			return models.CartItem{}, err
 		}
 		return cartItem, nil
 	} else if err != nil {
+		fmt.Println("HelloWorld2")
 		return models.CartItem{}, err
 	}
 
@@ -66,6 +69,7 @@ func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, er
 	updateQuery := "UPDATE cart_items SET quantity = ? WHERE id = ?"
 	_, err = cr.DB.Exec(updateQuery, existingItem.Quantity, existingItem.ID)
 	if err != nil {
+		fmt.Println("HelloWorld3")
 		return models.CartItem{}, err
 	}
 
@@ -80,7 +84,13 @@ func (cr *CartRepository) GetCartByUserID(userID uint) (*models.Cart, error) {
 		return nil, err
 	}
 
-	itemsQuery := "SELECT id, cart_id, product_id, quantity, created_at, updated_at, deleted_at FROM cart_items WHERE cart_id = ?"
+	itemsQuery := `
+	SELECT ci.id, ci.cart_id, ci.product_id, ci.quantity, ci.created_at, ci.updated_at, ci.deleted_at, 
+	       p.name, p.price, p.description 
+	FROM cart_items ci
+	JOIN products p ON ci.product_id = p.id
+	WHERE ci.cart_id = ?`
+
 	rows, err := cr.DB.Query(itemsQuery, cart.ID)
 	if err != nil {
 		return nil, err
@@ -90,9 +100,11 @@ func (cr *CartRepository) GetCartByUserID(userID uint) (*models.Cart, error) {
 	cart.Items = []models.CartItem{}
 	for rows.Next() {
 		var item models.CartItem
-		if err := rows.Scan(&item.ID, &item.CartID, &item.ProductID, &item.Quantity, &item.CreatedAt, &item.UpdatedAt, &item.DeletedAt); err != nil {
+		var product models.Product
+		if err := rows.Scan(&item.ID, &item.CartID, &item.ProductID, &item.Quantity, &item.CreatedAt, &item.UpdatedAt, &item.DeletedAt, &product.Name, &product.Price, &product.Description); err != nil {
 			return nil, err
 		}
+		item.Product = product
 		cart.Items = append(cart.Items, item)
 	}
 
@@ -106,5 +118,10 @@ func (cr *CartRepository) GetCartByUserID(userID uint) (*models.Cart, error) {
 func (cr *CartRepository) ClearCart(cartID uint) error {
 	query := "DELETE FROM cart_items WHERE cart_id = ?"
 	_, err := cr.DB.Exec(query, cartID)
+	return err
+}
+
+func (cr *CartRepository) RemoveItem(userID uint, productID uint) error {
+	_, err := cr.DB.Exec("DELETE FROM cart_items WHERE cart_id = (SELECT id FROM carts WHERE user_id = ?) AND product_id = ?", userID, productID)
 	return err
 }

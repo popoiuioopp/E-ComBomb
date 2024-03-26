@@ -4,6 +4,7 @@ import (
 	"e-combomb/models"
 	"e-combomb/services"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
@@ -36,11 +37,13 @@ func (cc *CartController) AddItemToCart() gin.HandlerFunc {
 		}
 
 		// Bind the incoming JSON payload to the cartItem structure
-		var cartItem models.CartItem
-		if err := c.ShouldBindJSON(&cartItem); err != nil {
+		var requestCartItem models.AddToCartRequest
+		if err := c.ShouldBindJSON(&requestCartItem); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+
+		cartItem := models.CartItem{ProductID: requestCartItem.ProductId, Quantity: requestCartItem.Quantity}
 
 		// Add item to cart using the service
 		result, err := cc.service.AddItemToCart(userID, cartItem)
@@ -74,5 +77,35 @@ func (cc *CartController) GetCart() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, cart)
+	}
+}
+
+func (cc *CartController) RemoveItemFromCart() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, err := cc.store.Get(c.Request, "session-name")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get session"})
+			return
+		}
+
+		userID, ok := session.Values["user_id"].(uint)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+			return
+		}
+
+		productID, err := strconv.ParseUint(c.Param("productId"), 10, 32)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid product ID"})
+			return
+		}
+
+		err = cc.service.RemoveItemFromCart(userID, uint(productID))
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to remove item from cart"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "item removed from cart"})
 	}
 }
