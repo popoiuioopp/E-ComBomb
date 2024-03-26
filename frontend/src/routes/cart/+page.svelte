@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { ENDPOINTS } from '$lib/constants/endpoints';
 	import { onMount } from 'svelte';
 	let placeholderImage =
@@ -25,6 +26,8 @@
 
 	let cart = null;
 	let cartItems: CartItem[] = [];
+
+	$: totalPrice = cartItems.reduce((total, item) => total + item.quantity * item.product.price, 0);
 
 	onMount(async () => {
 		// Fetch cart items from the backend
@@ -61,6 +64,23 @@
 			console.error('Error removing item from cart:', error);
 		}
 	}
+
+	async function confirmOrder() {
+		try {
+			const response = await fetch(ENDPOINTS.placeOder, {
+				method: 'POST',
+				credentials: 'include'
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to place an order');
+			}
+
+			goto('/order');
+		} catch (error) {
+			console.error('Error removing item from cart:', error);
+		}
+	}
 </script>
 
 <h1 class="cart-header">Shopping Cart</h1>
@@ -83,6 +103,10 @@
 				<button on:click={() => removeFromCart(item.product_id)}>Remove from Cart</button>
 			</div>
 		{/each}
+		<div class="cart-summary">
+			<h3>Total Price: {totalPrice} baht</h3>
+			<button on:click={confirmOrder} class="confirm-order">Confirm Order</button>
+		</div>
 	</div>
 {/if}
 
@@ -129,5 +153,21 @@
 		border: none;
 		border-radius: 5px;
 		cursor: pointer;
+	}
+
+	.cart-summary {
+		text-align: center;
+		margin-top: 20px;
+	}
+
+	.confirm-order {
+		padding: 10px 20px;
+		background-color: #4caf50;
+		color: white;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top: 10px;
 	}
 </style>
