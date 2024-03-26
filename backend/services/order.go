@@ -17,7 +17,6 @@ func NewOrderService(orderRepo *repositories.OrderRepository, cartRepo *reposito
 	}
 }
 
-// PlaceOrder handles the logic to convert a user's cart into an order
 func (service *OrderService) PlaceOrder(userID uint) error {
 	cart, err := service.cartRepo.GetCartByUserID(userID)
 	if err != nil {
@@ -43,7 +42,6 @@ func (service *OrderService) PlaceOrder(userID uint) error {
 		return err
 	}
 
-	// Optionally clear the cart after the order is placed
 	if err := service.cartRepo.ClearCart(cart.ID); err != nil {
 		return err
 	}
