@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"e-combomb/services"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +31,7 @@ func (oc *OrderController) PlaceOrder() gin.HandlerFunc {
 		}
 
 		if err := oc.orderService.PlaceOrder(userID); err != nil {
+			fmt.Println("Error placing order: ", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not place order"})
 			return
 		}

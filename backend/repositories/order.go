@@ -24,8 +24,8 @@ func (repo *OrderRepository) CreateOrder(order *models.Order) error {
 	}
 
 	// Insert the order
-	orderInsertQuery := "INSERT INTO orders (user_id, created_at, updated_at) VALUES (?, ?, ?)"
-	res, err := tx.Exec(orderInsertQuery, order.UserID, order.CreatedAt, order.UpdatedAt)
+	orderInsertQuery := "INSERT INTO orders (user_id) VALUES (?)"
+	res, err := tx.Exec(orderInsertQuery, order.UserID)
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("failed to insert order: %w", err)

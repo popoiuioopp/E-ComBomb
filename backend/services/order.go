@@ -33,6 +33,8 @@ func (service *OrderService) PlaceOrder(userID uint) error {
 		orderItem := models.OrderItem{
 			ProductID: item.ProductID,
 			Quantity:  item.Quantity,
+			CreatedAt: item.CreatedAt,
+			UpdatedAt: item.UpdatedAt,
 		}
 		order.Items = append(order.Items, orderItem)
 	}
