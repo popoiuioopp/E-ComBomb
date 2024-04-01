@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { ENDPOINTS } from '$lib/constants/endpoints';
+	import { PLACEHOLDER_IMAGE } from '$lib/constants/utils';
 
 	export let product: {
 		id: number;
@@ -9,9 +10,6 @@
 		price: number;
 		image: string | null;
 	};
-
-	let placeholderImage =
-		'https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg';
 
 	async function addToCart() {
 		console.log(product);
@@ -48,7 +46,7 @@
 
 <div class="product-card">
 	<div class="product-image">
-		<img src={product.image || placeholderImage} alt="product" />
+		<img src={product.image || PLACEHOLDER_IMAGE} alt="product" />
 	</div>
 	<h2 class="product-name">{product.name}</h2>
 	<p class="product-description">{product.description}</p>

@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import CartItemCard from '$lib/components/CartItemCard.svelte';
 	import { ENDPOINTS } from '$lib/constants/endpoints';
+	import { PLACEHOLDER_IMAGE } from '$lib/constants/utils';
 	import { onMount } from 'svelte';
-	let placeholderImage =
-		'https://ichef.bbci.co.uk/news/976/cpsprodpb/16620/production/_91408619_55df76d5-2245-41c1-8031-07a4da3f313f.jpg';
 
 	interface Product {
 		id: number;
@@ -65,6 +65,29 @@
 		}
 	}
 
+	async function updateQuantity(productId: number, quantity: number) {
+		try {
+			const response = await fetch(`${ENDPOINTS.updateItemQuantity}/${productId}`, {
+				method: 'UPDATE',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ quantity: quantity })
+			});
+
+			if (!response.ok) {
+				throw new Error('Failed to update item quantity');
+			}
+
+			cartItems = cartItems.map((item) =>
+				item.product_id === productId ? { ...item, quantity } : item
+			);
+		} catch (error) {
+			console.error('Error updating item quantity:', error);
+		}
+	}
+
 	async function confirmOrder() {
 		try {
 			const response = await fetch(ENDPOINTS.placeOder, {
@@ -92,16 +115,7 @@
 {:else}
 	<div class="cart-items">
 		{#each cartItems as item (item.id)}
-			<div class="cart-item">
-				<img src={item.product.image || placeholderImage} alt={item.name} class="cart-item-image" />
-				<div class="cart-item-details">
-					<h2>{item.product.name}</h2>
-					<p>{item.product.description}</p>
-					<p>Quantity: {item.quantity}</p>
-					<p>Price: {item.product.price} baht</p>
-				</div>
-				<button on:click={() => removeFromCart(item.product_id)}>Remove from Cart</button>
-			</div>
+			<CartItemCard {item} {removeFromCart} {updateQuantity} />
 		{/each}
 		<div class="cart-summary">
 			<h3>Total Price: {totalPrice} baht</h3>
@@ -125,25 +139,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	.cart-item {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 10px;
-		border-bottom: 1px solid #ccc;
-		width: 80%;
-	}
-
-	.cart-item-image {
-		width: 100px;
-		height: auto;
-	}
-
-	.cart-item-details {
-		flex-grow: 1;
-		padding: 0 20px;
 	}
 
 	button {
