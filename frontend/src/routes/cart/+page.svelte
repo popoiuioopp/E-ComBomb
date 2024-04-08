@@ -67,7 +67,6 @@
 
 	async function updateQuantity(productId: number, quantity: number) {
 		try {
-			console.log('requests: ', productId, quantity);
 			const response = await fetch(`${ENDPOINTS.updateItemQuantity}/${productId}`, {
 				method: 'PUT',
 				credentials: 'include',
@@ -80,8 +79,6 @@
 			if (!response.ok) {
 				throw new Error('Failed to update item quantity');
 			}
-
-			console.log('response: ', response);
 
 			cartItems = cartItems.map((item) =>
 				item.product_id === productId ? { ...item, quantity } : item

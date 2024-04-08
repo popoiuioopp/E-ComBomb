@@ -8,7 +8,7 @@ import (
 )
 
 type User struct {
-	ID            uint
+	Id            uint
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	DeletedAt     sql.NullTime

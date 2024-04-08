@@ -24,6 +24,6 @@ func (ar *AuthRepository) CreateUser(user *models.User) error {
 func (ar *AuthRepository) GetUser(username string) (models.User, error) {
 	query := "SELECT id, username, password FROM users WHERE username = ?;"
 	var user models.User
-	err := ar.db.QueryRow(query, username).Scan(&user.ID, &user.Username, &user.Password)
+	err := ar.db.QueryRow(query, username).Scan(&user.Id, &user.Username, &user.Password)
 	return user, err
 }

@@ -12,7 +12,6 @@
 	};
 
 	async function addToCart() {
-		console.log(product);
 		try {
 			const response = await fetch(ENDPOINTS.addToCart, {
 				method: 'POST',
@@ -26,8 +25,6 @@
 			if (!response.ok) {
 				throw new Error('Failed to add item to cart');
 			}
-
-			console.log('Item added to cart');
 		} catch (error) {
 			console.error('Add to cart error:', error);
 		}

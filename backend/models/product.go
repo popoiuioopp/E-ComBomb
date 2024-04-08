@@ -6,7 +6,7 @@ import (
 )
 
 type Product struct {
-	ID            uint
+	Id            uint
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 	DeletedAt     sql.NullTime
@@ -25,7 +25,7 @@ type AddProductRequestBody struct {
 }
 
 type ProductInterface struct {
-	ID            uint    `json:"id" binding:"required"`
+	Id            uint    `json:"id" binding:"required"`
 	Name          string  `json:"name" binding:"required"`
 	Price         float32 `json:"price" binding:"required"`
 	Description   string  `json:"description"`
@@ -37,7 +37,7 @@ func MapProductsToProductInterfaces(products []Product) []ProductInterface {
 	var productInterfaces []ProductInterface
 	for _, product := range products {
 		productInterface := ProductInterface{
-			ID:            product.ID,
+			Id:            product.Id,
 			Name:          product.Name,
 			Price:         product.Price,
 			Description:   product.Description,

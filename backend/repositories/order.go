@@ -25,13 +25,13 @@ func (repo *OrderRepository) CreateOrder(order *models.Order) error {
 
 	// Insert the order
 	orderInsertQuery := "INSERT INTO orders (user_id) VALUES (?)"
-	res, err := tx.Exec(orderInsertQuery, order.UserID)
+	res, err := tx.Exec(orderInsertQuery, order.UserId)
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("failed to insert order: %w", err)
 	}
 
-	orderID, err := res.LastInsertId()
+	orderId, err := res.LastInsertId()
 	if err != nil {
 		tx.Rollback()
 		return fmt.Errorf("failed to retrieve last insert ID for order: %w", err)
@@ -42,7 +42,7 @@ func (repo *OrderRepository) CreateOrder(order *models.Order) error {
 	valueArgs := []interface{}{}
 	for _, item := range order.Items {
 		valueStrings = append(valueStrings, "(?, ?, ?, ?, ?)")
-		valueArgs = append(valueArgs, orderID, item.ProductID, item.Quantity, item.CreatedAt, item.UpdatedAt)
+		valueArgs = append(valueArgs, orderId, item.ProductId, item.Quantity, item.CreatedAt, item.UpdatedAt)
 	}
 
 	itemInsertQuery := fmt.Sprintf("INSERT INTO order_items (order_id, product_id, quantity, created_at, updated_at) VALUES %s",

@@ -6,21 +6,21 @@ import (
 )
 
 type Order struct {
-	ID        uint
+	Id        uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
-	UserID    uint
+	UserId    uint
 	Items     []OrderItem
 }
 
 type OrderItem struct {
-	ID        uint
+	Id        uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
-	OrderID   uint
-	ProductID uint
+	OrderId   uint
+	ProductId uint
 	Product   Product
 	Quantity  int
 }

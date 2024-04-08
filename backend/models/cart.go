@@ -6,7 +6,7 @@ import (
 )
 
 type Cart struct {
-	ID        uint
+	Id        uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
@@ -15,12 +15,12 @@ type Cart struct {
 }
 
 type CartItem struct {
-	ID        uint
+	Id        uint
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt sql.NullTime
-	CartID    uint
-	ProductID uint    `json:"product_id" binding:"required"`
+	CartId    uint
+	ProductId uint    `json:"product_id" binding:"required"`
 	Quantity  int     `json:"quantity" binding:"required"`
 	Product   Product `json:"product"`
 }

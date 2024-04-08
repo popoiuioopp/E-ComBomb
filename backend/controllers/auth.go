@@ -69,7 +69,7 @@ func (ac *AuthController) Login(store *sessions.CookieStore) gin.HandlerFunc {
 
 		session.Values["authenticated"] = true
 		session.Values["username"] = user.Username
-		session.Values["user_id"] = user.ID
+		session.Values["user_id"] = user.Id
 
 		err = session.Save(c.Request, c.Writer)
 		if err != nil {

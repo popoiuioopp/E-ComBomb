@@ -17,20 +17,20 @@ func NewOrderService(orderRepo *repositories.OrderRepository, cartRepo *reposito
 	}
 }
 
-func (service *OrderService) PlaceOrder(userID uint) error {
-	cart, err := service.cartRepo.GetCartByUserID(userID)
+func (service *OrderService) PlaceOrder(userId uint) error {
+	cart, err := service.cartRepo.GetCartByUserId(userId)
 	if err != nil {
 		return err
 	}
 
 	order := models.Order{
-		UserID: userID,
+		UserId: userId,
 		Items:  make([]models.OrderItem, 0, len(cart.Items)),
 	}
 
 	for _, item := range cart.Items {
 		orderItem := models.OrderItem{
-			ProductID: item.ProductID,
+			ProductId: item.ProductId,
 			Quantity:  item.Quantity,
 			CreatedAt: item.CreatedAt,
 			UpdatedAt: item.UpdatedAt,
@@ -42,7 +42,7 @@ func (service *OrderService) PlaceOrder(userID uint) error {
 		return err
 	}
 
-	if err := service.cartRepo.ClearCart(cart.ID); err != nil {
+	if err := service.cartRepo.ClearCart(cart.Id); err != nil {
 		return err
 	}
 

@@ -65,4 +65,6 @@ func Cart(router *gin.RouterGroup, store *sessions.CookieStore, controller *cont
 
 func Order(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.OrderController, authMiddleware *middlewares.AuthMiddleWare) {
 	router.POST("order", authMiddleware.SessionAuthMiddleware(store), controller.PlaceOrder())
+	router.GET("order", authMiddleware.SessionAuthMiddleware(store), controller.GetOrders())
+	router.GET("order/:orderId", authMiddleware.SessionAuthMiddleware(store), controller.GetOrderById())
 }

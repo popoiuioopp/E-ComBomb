@@ -24,18 +24,40 @@ func NewOrderController(orderService *services.OrderService, store *sessions.Coo
 func (oc *OrderController) PlaceOrder() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		session, _ := oc.store.Get(c.Request, "session-name")
-		userID, ok := session.Values["user_id"].(uint)
+		userId, ok := session.Values["user_id"].(uint)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
 		}
 
-		if err := oc.orderService.PlaceOrder(userID); err != nil {
+		if err := oc.orderService.PlaceOrder(userId); err != nil {
 			fmt.Println("Error placing order: ", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not place order"})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": "order placed successfully"})
+	}
+}
+
+func (oc *OrderController) GetOrders() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, _ := oc.store.Get(c.Request, "session-name")
+		userId, ok := session.Values["user_id"].(uint)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+			return
+		}
+	}
+}
+
+func (oc *OrderController) GetOrderById() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, _ := oc.store.Get(c.Request, "session-name")
+		userId, ok := session.Values["user_id"].(uint)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+			return
+		}
 	}
 }

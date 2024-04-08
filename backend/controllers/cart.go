@@ -29,8 +29,8 @@ func (cc *CartController) AddItemToCart() gin.HandlerFunc {
 			return
 		}
 
-		// Extract the userID from the session
-		userID, ok := session.Values["user_id"].(uint)
+		// Extract the userId from the session
+		userId, ok := session.Values["user_id"].(uint)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
@@ -43,10 +43,10 @@ func (cc *CartController) AddItemToCart() gin.HandlerFunc {
 			return
 		}
 
-		cartItem := models.CartItem{ProductID: requestCartItem.ProductId, Quantity: requestCartItem.Quantity}
+		cartItem := models.CartItem{ProductId: requestCartItem.ProductId, Quantity: requestCartItem.Quantity}
 
 		// Add item to cart using the service
-		result, err := cc.service.AddItemToCart(userID, cartItem)
+		result, err := cc.service.AddItemToCart(userId, cartItem)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
@@ -64,13 +64,13 @@ func (cc *CartController) GetCart() gin.HandlerFunc {
 			return
 		}
 
-		userID, ok := session.Values["user_id"].(uint)
+		userId, ok := session.Values["user_id"].(uint)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
 			return
 		}
 
-		cart, err := cc.service.GetCartByUserID(userID)
+		cart, err := cc.service.GetCartByUserId(userId)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve cart"})
 			return
@@ -88,19 +88,19 @@ func (cc *CartController) RemoveItemFromCart() gin.HandlerFunc {
 			return
 		}
 
-		userID, ok := session.Values["user_id"].(uint)
+		userId, ok := session.Values["user_id"].(uint)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
 		}
 
-		productID, err := strconv.ParseUint(c.Param("productId"), 10, 32)
+		productId, err := strconv.ParseUint(c.Param("productId"), 10, 32)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid product ID"})
 			return
 		}
 
-		err = cc.service.RemoveItemFromCart(userID, uint(productID))
+		err = cc.service.RemoveItemFromCart(userId, uint(productId))
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to remove item from cart"})
 			return
@@ -118,14 +118,14 @@ func (cc *CartController) UpdateCartItem() gin.HandlerFunc {
 			return
 		}
 
-		userID, ok := session.Values["user_id"].(uint)
+		userId, ok := session.Values["user_id"].(uint)
 		if !ok {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
 		}
 
 		// Extracting product ID and new quantity from the request
-		productID, _ := strconv.ParseUint(c.Param("productId"), 10, 32)
+		productId, _ := strconv.ParseUint(c.Param("productId"), 10, 32)
 		var json models.UpdateCartRequest
 		if err := c.ShouldBindJSON(&json); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -133,7 +133,7 @@ func (cc *CartController) UpdateCartItem() gin.HandlerFunc {
 		}
 
 		// Updating the item in the cart
-		err = cc.service.UpdateItemQuantity(userID, uint(productID), json.Quantity)
+		err = cc.service.UpdateItemQuantity(userId, uint(productId), json.Quantity)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item quantity"})
 			return
