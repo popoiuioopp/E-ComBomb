@@ -60,6 +60,7 @@ func Cart(router *gin.RouterGroup, store *sessions.CookieStore, controller *cont
 	router.GET("cart", authMiddleware.SessionAuthMiddleware(store), controller.GetCart())
 	router.POST("cart", authMiddleware.SessionAuthMiddleware(store), controller.AddItemToCart())
 	router.DELETE("/cart/:productId", authMiddleware.SessionAuthMiddleware(store), controller.RemoveItemFromCart())
+	router.PUT("/cart/:productId", authMiddleware.SessionAuthMiddleware(store), controller.UpdateCartItem())
 }
 
 func Order(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.OrderController, authMiddleware *middlewares.AuthMiddleWare) {

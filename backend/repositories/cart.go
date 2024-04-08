@@ -3,7 +3,6 @@ package repositories
 import (
 	"database/sql"
 	"e-combomb/models"
-	"fmt"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -55,12 +54,10 @@ func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, er
 		insertQuery := "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)"
 		_, err := cr.DB.Exec(insertQuery, cartItem.CartID, cartItem.ProductID, cartItem.Quantity)
 		if err != nil {
-			fmt.Println("HelloWorld1")
 			return models.CartItem{}, err
 		}
 		return cartItem, nil
 	} else if err != nil {
-		fmt.Println("HelloWorld2")
 		return models.CartItem{}, err
 	}
 
@@ -69,7 +66,6 @@ func (cr *CartRepository) AddItem(cartItem models.CartItem) (models.CartItem, er
 	updateQuery := "UPDATE cart_items SET quantity = ? WHERE id = ?"
 	_, err = cr.DB.Exec(updateQuery, existingItem.Quantity, existingItem.ID)
 	if err != nil {
-		fmt.Println("HelloWorld3")
 		return models.CartItem{}, err
 	}
 
@@ -123,5 +119,11 @@ func (cr *CartRepository) ClearCart(cartID uint) error {
 
 func (cr *CartRepository) RemoveItem(userID uint, productID uint) error {
 	_, err := cr.DB.Exec("DELETE FROM cart_items WHERE cart_id = (SELECT id FROM carts WHERE user_id = ?) AND product_id = ?", userID, productID)
+	return err
+}
+
+func (cr *CartRepository) UpdateItemQuantity(cartID uint, productID uint, quantity int) error {
+	query := "UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND product_id = ?"
+	_, err := cr.DB.Exec(query, quantity, cartID, productID)
 	return err
 }

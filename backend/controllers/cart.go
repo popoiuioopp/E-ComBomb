@@ -109,3 +109,36 @@ func (cc *CartController) RemoveItemFromCart() gin.HandlerFunc {
 		c.JSON(http.StatusOK, gin.H{"message": "item removed from cart"})
 	}
 }
+
+func (cc *CartController) UpdateCartItem() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		session, err := cc.store.Get(c.Request, "session-name")
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to get session"})
+			return
+		}
+
+		userID, ok := session.Values["user_id"].(uint)
+		if !ok {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
+			return
+		}
+
+		// Extracting product ID and new quantity from the request
+		productID, _ := strconv.ParseUint(c.Param("productId"), 10, 32)
+		var json models.UpdateCartRequest
+		if err := c.ShouldBindJSON(&json); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Updating the item in the cart
+		err = cc.service.UpdateItemQuantity(userID, uint(productID), json.Quantity)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update item quantity"})
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Item quantity updated successfully"})
+	}
+}

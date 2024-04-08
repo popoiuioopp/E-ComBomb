@@ -12,7 +12,7 @@ export const ENDPOINTS = {
     getCart: `${API_BASE_URL}/api/cart`,
     addToCart: `${API_BASE_URL}/api/cart`,
     deleteItemFromCart: `${API_BASE_URL}/api/cart`,
-    updateItemQuantity: `${API_BASE_URL}/api/cart/`,
+    updateItemQuantity: `${API_BASE_URL}/api/cart`,
 
     // Order
     placeOder: `${API_BASE_URL}/api/order`,

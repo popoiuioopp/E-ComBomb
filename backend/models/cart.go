@@ -29,3 +29,7 @@ type AddToCartRequest struct {
 	ProductId uint `json:"product_id"`
 	Quantity  int  `json:"quantity"`
 }
+
+type UpdateCartRequest struct {
+	Quantity int `json:"quantity"`
+}
