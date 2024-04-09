@@ -2,7 +2,6 @@
 	import { goto } from '$app/navigation';
 	import CartItemCard from '$lib/components/CartItemCard.svelte';
 	import { ENDPOINTS } from '$lib/constants/endpoints';
-	import { PLACEHOLDER_IMAGE } from '$lib/constants/utils';
 	import { onMount } from 'svelte';
 
 	interface Product {

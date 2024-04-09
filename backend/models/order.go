@@ -6,21 +6,21 @@ import (
 )
 
 type Order struct {
-	Id        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-	UserId    uint
-	Items     []OrderItem
+	Id        uint         `json:"id"`
+	CreatedAt time.Time    `json:"createdAt"`
+	UpdatedAt time.Time    `json:"updatedAt"`
+	DeletedAt sql.NullTime `json:"deletedAt"`
+	UserId    uint         `json:"userId"`
+	Items     []OrderItem  `json:"items"`
 }
 
 type OrderItem struct {
-	Id        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-	OrderId   uint
-	ProductId uint
-	Product   Product
-	Quantity  int
+	Id        uint         `json:"id"`
+	CreatedAt time.Time    `json:"createdAt"`
+	UpdatedAt time.Time    `json:"updatedAt"`
+	DeletedAt sql.NullTime `json:"deletedAt"`
+	OrderId   uint         `json:"orderId"`
+	ProductId uint         `json:"productId"`
+	Product   Product      `json:"product"`
+	Quantity  int          `json:"quantity"`
 }
