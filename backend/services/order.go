@@ -48,3 +48,11 @@ func (service *OrderService) PlaceOrder(userId uint) error {
 
 	return nil
 }
+
+func (service *OrderService) GetAllOrders(userId int) ([]models.Order, error) {
+	return service.orderRepo.GetAllOrders(userId)
+}
+
+func (service *OrderService) GetOrderById(userId, orderId int) (*models.Order, error) {
+	return service.orderRepo.GetOrderById(userId, orderId)
+}

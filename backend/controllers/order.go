@@ -4,6 +4,7 @@ import (
 	"e-combomb/services"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
@@ -48,6 +49,13 @@ func (oc *OrderController) GetOrders() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
 		}
+
+		Orders, err := oc.orderService.GetAllOrders(int(userId))
+		if err != nil {
+			c.JSON(http.StatusBadGateway, gin.H{"error": "there's an error occurs"})
+		}
+
+		c.JSON(http.StatusOK, gin.H{"orders": Orders})
 	}
 }
 
@@ -59,5 +67,24 @@ func (oc *OrderController) GetOrderById() gin.HandlerFunc {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "user not authenticated"})
 			return
 		}
+
+		orderId, err := strconv.Atoi(c.Param("orderId"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid order ID"})
+			return
+		}
+
+		order, err := oc.orderService.GetOrderById(int(userId), orderId)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting order"})
+			return
+		}
+
+		if order == nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": "order not found"})
+			return
+		}
+
+		c.JSON(http.StatusOK, order)
 	}
 }

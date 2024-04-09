@@ -18,7 +18,7 @@ func (s *ProductService) AddProduct(productRequestBody models.AddProductRequestB
 		Name:        productRequestBody.Name,
 		Description: productRequestBody.Description,
 		Price:       productRequestBody.Price,
-		User_id:     userId,
+		UserId:      userId,
 	}
 
 	return s.productRepository.AddProduct(&newProduct)
