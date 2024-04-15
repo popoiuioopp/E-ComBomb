@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -140,11 +141,41 @@ func migrate(db *sql.DB, migrationsDir string) {
 	}
 }
 
+// Helper function to read the manifest file
+func readManifest(manifestFile string) ([]string, error) {
+	var filenames []string
+	data, err := os.ReadFile(manifestFile)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(data, &filenames)
+	if err != nil {
+		return nil, err
+	}
+	return filenames, nil
+}
+
+func updateStoreProcs(db *sql.DB, storeProcDir, manifestFile string) {
+	filenames, err := readManifest(manifestFile)
+	if err != nil {
+		log.Fatalf("Error reading manifest file: %v", err)
+	}
+
+	for _, filename := range filenames {
+		fullPath := storeProcDir + "/" + filename
+		log.Printf("Applying Stored Procedure: %s\n", filename)
+		err := executeSQLFile(db, fullPath)
+		if err != nil {
+			log.Fatalf("Error applying Stored Procedure %s: %v", filename, err)
+		}
+	}
+}
+
 func main() {
 	env := NewEnv()
 	db := NewMySQLDatabase(env)
 	defer db.Close()
 
-	// Run migrations located in the "migrations" folder
 	migrate(db, "migrations")
+	updateStoreProcs(db, "store_procs", "stored_procs_order.json")
 }
