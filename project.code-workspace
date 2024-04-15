@@ -5,7 +5,8 @@
     "settings": {
       "typescript.tsdk": "frontend/node_modules/typescript/lib",
       "cSpell.words": [
-        "healthcheck"
+        "healthcheck",
+        "mapstructure"
       ]
     }
   }
