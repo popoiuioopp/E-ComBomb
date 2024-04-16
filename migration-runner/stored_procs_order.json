@@ -1,4 +1,12 @@
 [
-    "sp_create_user_v1.sql", 
-    "sp_get_user_v1.sql"
+  "sp_create_user_v1.sql",
+  "sp_get_user_v1.sql",
+  "sp_add_item_v1.sql",
+  "sp_clear_cart_v1.sql",
+  "sp_create_user_v1.sql",
+  "sp_get_cart_by_user_Id_v1.sql",
+  "sp_get_or_create_cart_v1.sql",
+  "sp_get_user_v1.sql",
+  "sp_remove_item_v1.sql",
+  "sp_update_item_quantity_v1.sql"
 ]

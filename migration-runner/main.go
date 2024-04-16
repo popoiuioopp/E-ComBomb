@@ -45,7 +45,8 @@ func NewMySQLDatabase(env *Env) *sql.DB {
 	dbPass := env.DBPass
 	dbName := env.DBName
 
-	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", dbUser, dbPass, dbHost, dbPort, dbName)
+	mysqlURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
+		dbUser, dbPass, dbHost, dbPort, dbName)
 	db, err := sql.Open("mysql", mysqlURI)
 
 	if err != nil {

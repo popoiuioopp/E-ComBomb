@@ -3,6 +3,7 @@ package services
 import (
 	"e-combomb/models"
 	"e-combomb/repositories"
+	"log"
 )
 
 type CartService struct {
@@ -23,8 +24,12 @@ func (cs *CartService) AddItemToCart(userId uint, item models.CartItem) (models.
 	return cs.repo.AddItem(item)
 }
 
-func (cs *CartService) GetCartByUserId(userId uint) (*models.Cart, error) {
-	return cs.repo.GetCartByUserId(userId)
+func (cs *CartService) GetCartByUserId(userId uint) (models.Cart, error) {
+	cart, err := cs.repo.GetCartByUserId(userId)
+	if err != nil {
+		log.Printf("Failed query GetCartByUserId %v", err)
+	}
+	return cart, nil
 }
 
 func (cs *CartService) RemoveItemFromCart(userId uint, productId uint) error {
@@ -35,6 +40,7 @@ func (cs *CartService) UpdateItemQuantity(userId uint, productId uint, quantity 
 	// Get the user's cart
 	cart, err := cs.repo.GetCartByUserId(userId)
 	if err != nil {
+		log.Printf("Failed query GetCartByUserId %v", err)
 		return err
 	}
 
