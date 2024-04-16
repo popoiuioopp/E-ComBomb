@@ -16,15 +16,13 @@ func NewProductRepository(database *sql.DB) *ProductRepository {
 }
 
 func (pr *ProductRepository) AddProduct(product *models.Product) error {
-	query := "INSERT INTO products (name, price, description, user_id, product_image) VALUES (?, ?, ?, ?, ?);"
-	_, err := pr.db.Exec(query, product.Name, product.Price, product.Description, product.UserId, product.ProductImage)
+	_, err := pr.db.Exec("CALL AddProduct_v1(?, ?, ?, ?, ?)", product.Name, product.Price, product.Description, product.UserId, product.ProductImage)
 	return err
 }
 
 func (pr *ProductRepository) GetAllProducts() ([]models.Product, error) {
 	var products []models.Product
-	query := "SELECT id, created_at, updated_at, name, price, description, user_id, product_image FROM products"
-	results, err := pr.db.Query(query)
+	results, err := pr.db.Query("CALL GetAllProducts_v1()")
 	if err != nil {
 		return nil, err
 	}
