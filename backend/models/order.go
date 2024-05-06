@@ -6,12 +6,11 @@ import (
 )
 
 type Order struct {
-	Id        uint         `json:"id"`
-	CreatedAt time.Time    `json:"createdAt"`
-	UpdatedAt time.Time    `json:"updatedAt"`
-	DeletedAt sql.NullTime `json:"deletedAt"`
-	UserId    uint         `json:"userId"`
-	Items     []OrderItem  `json:"items"`
+	Id        uint        `json:"id"`
+	CreatedAt time.Time   `json:"createdAt"`
+	UpdatedAt time.Time   `json:"updatedAt"`
+	UserId    uint        `json:"userId"`
+	Items     []OrderItem `json:"items"`
 }
 
 type OrderItem struct {

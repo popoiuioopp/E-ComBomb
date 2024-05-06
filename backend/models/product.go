@@ -1,15 +1,7 @@
 package models
 
-import (
-	"database/sql"
-	"time"
-)
-
 type Product struct {
 	Id           uint
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	DeletedAt    sql.NullTime
 	Name         string  `json:"name" binding:"required"`
 	Price        float32 `json:"price" binding:"required"`
 	Description  string  `json:"description"`

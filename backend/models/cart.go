@@ -1,24 +1,13 @@
 package models
 
-import (
-	"database/sql"
-	"time"
-)
-
 type Cart struct {
-	Id        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
-	UserId    uint
-	Items     []CartItem
+	Id     uint
+	UserId uint
+	Items  []CartItem
 }
 
 type CartItem struct {
 	Id        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt sql.NullTime
 	CartId    uint
 	ProductId uint    `json:"product_id" binding:"required"`
 	Quantity  int     `json:"quantity" binding:"required"`

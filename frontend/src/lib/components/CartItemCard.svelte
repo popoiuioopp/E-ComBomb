@@ -10,7 +10,7 @@
 	}
 
 	interface CartItem {
-		id: number;
+		Id: number;
 		product_id: number;
 		name: string;
 		description: string;

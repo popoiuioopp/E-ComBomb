@@ -17,7 +17,7 @@ func NewCartRepository(db *sql.DB) *CartRepository {
 
 func (cr *CartRepository) GetOrCreateCart(userId uint) (*models.Cart, error) {
 	var cart models.Cart
-	err := cr.DB.QueryRow("CALL GetOrCreateCart_v1(?)", userId).Scan(&cart.Id, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt, &cart.UserId)
+	err := cr.DB.QueryRow("CALL GetOrCreateCart_v1(?)", userId).Scan(&cart.Id, &cart.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -43,8 +43,7 @@ func (cr *CartRepository) GetCartByUserId(userId uint) (models.Cart, error) {
 	defer rows.Close()
 
 	if rows.Next() {
-		err := rows.Scan(&cart.Id, &cart.CreatedAt, &cart.UpdatedAt, &cart.DeletedAt,
-			&cart.UserId)
+		err := rows.Scan(&cart.Id, &cart.UserId)
 		if err != nil {
 			return models.Cart{}, err
 		}
@@ -56,7 +55,7 @@ func (cr *CartRepository) GetCartByUserId(userId uint) (models.Cart, error) {
 	for rows.Next() {
 		var cartItem models.CartItem
 
-		err := rows.Scan(&cartItem.ProductId, &cartItem.Quantity, &cartItem.Product.Name,
+		err := rows.Scan(&cartItem.Id, &cartItem.ProductId, &cartItem.Quantity, &cartItem.Product.Name,
 			&cartItem.Product.Price, &cartItem.Product.Description)
 		if err != nil {
 			return models.Cart{}, err

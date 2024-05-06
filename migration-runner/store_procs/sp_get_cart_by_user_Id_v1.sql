@@ -14,9 +14,6 @@ LIMIT
 IF v_cartId IS NOT NULL THEN
 SELECT
     c.id,
-    c.created_at,
-    c.updated_at,
-    c.deleted_at,
     c.user_id
 FROM
     carts c
@@ -24,6 +21,7 @@ WHERE
     c.id = v_cartId;
 
 SELECT
+    ci.id,
     ci.product_id,
     ci.quantity,
     p.name,

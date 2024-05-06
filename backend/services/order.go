@@ -3,6 +3,7 @@ package services
 import (
 	"e-combomb/models"
 	"e-combomb/repositories"
+	"log"
 )
 
 type OrderService struct {
@@ -20,6 +21,7 @@ func NewOrderService(orderRepo *repositories.OrderRepository, cartRepo *reposito
 func (service *OrderService) PlaceOrder(userId uint) error {
 	cart, err := service.cartRepo.GetCartByUserId(userId)
 	if err != nil {
+		log.Printf("Error getting cart by user id: %v\n", err)
 		return err
 	}
 
@@ -32,17 +34,17 @@ func (service *OrderService) PlaceOrder(userId uint) error {
 		orderItem := models.OrderItem{
 			ProductId: item.ProductId,
 			Quantity:  item.Quantity,
-			CreatedAt: item.CreatedAt,
-			UpdatedAt: item.UpdatedAt,
 		}
 		order.Items = append(order.Items, orderItem)
 	}
 
 	if err := service.orderRepo.CreateOrder(&order); err != nil {
+		log.Printf("Error creating Order: %v\n", err)
 		return err
 	}
 
 	if err := service.cartRepo.ClearCart(cart.Id); err != nil {
+		log.Printf("Error clearing cart: %v\n", err)
 		return err
 	}
 

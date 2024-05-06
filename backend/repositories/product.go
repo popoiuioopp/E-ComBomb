@@ -30,7 +30,7 @@ func (pr *ProductRepository) GetAllProducts() ([]models.Product, error) {
 
 	for results.Next() {
 		var product models.Product
-		if err := results.Scan(&product.Id, &product.CreatedAt, &product.UpdatedAt, &product.Name, &product.Price, &product.Description, &product.UserId, &product.ProductImage); err != nil {
+		if err := results.Scan(&product.Id, &product.Name, &product.Price, &product.Description, &product.UserId, &product.ProductImage); err != nil {
 			return nil, err
 		}
 		products = append(products, product)

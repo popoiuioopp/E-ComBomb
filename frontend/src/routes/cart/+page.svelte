@@ -13,7 +13,7 @@
 	}
 
 	interface CartItem {
-		id: number;
+		Id: number;
 		product_id: number;
 		name: string;
 		description: string;
@@ -113,7 +113,7 @@
 	<p>Your cart is empty.</p>
 {:else}
 	<div class="cart-items">
-		{#each cartItems as item (item.id)}
+		{#each cartItems as item (item.Id)}
 			<CartItemCard {item} {removeFromCart} {updateQuantity} />
 		{/each}
 		<div class="cart-summary">
