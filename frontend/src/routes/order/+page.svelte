@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import OrderDetail from '$lib/components/OrderDetail.svelte';
+	import OrderCard from '$lib/components/OrderCard.svelte';
 	import { ENDPOINTS } from '$lib/constants/endpoints';
 
 	interface Product {
 		id: number;
-		createdAt: Date;
-		updatedAt: Date;
-		deletedAt: Date | null;
 		name: string;
 		price: number;
 		description: string;
@@ -17,9 +14,6 @@
 
 	interface OrderItem {
 		id: number;
-		createdAt: Date;
-		updatedAt: Date;
-		deletedAt: Date | null;
 		orderId: number;
 		productId: number;
 		product: Product;
@@ -72,7 +66,7 @@
 {:else}
 	<div class="orders">
 		{#each orders as order (order.id)}
-			<OrderDetail {order} />
+			<OrderCard {order} />
 		{/each}
 	</div>
 {/if}

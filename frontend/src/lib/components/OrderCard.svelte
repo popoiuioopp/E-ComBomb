@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import { PLACEHOLDER_IMAGE } from '$lib/constants/utils';
 
 	export let order: {
@@ -9,9 +10,6 @@
 		userId: number;
 		items: Array<{
 			id: number;
-			createdAt: Date;
-			updatedAt: Date;
-			deletedAt: Date | null;
 			orderId: number;
 			productId: number;
 			product: {
@@ -29,6 +27,7 @@
 <div class="order">
 	<h2>Order ID: {order.id}</h2>
 	<p>Order Date: {order.createdAt}</p>
+	<button on:click={() => goto(`/order/${order.id}`)}>Order Details</button>
 	{#each order.items as item (item.id)}
 		<div class="item">
 			<img

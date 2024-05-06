@@ -1,12 +1,12 @@
 package models
 
 import (
-	"database/sql"
 	"time"
 )
 
 type Order struct {
 	Id        uint        `json:"id"`
+	Status    string      `json:"status"`
 	CreatedAt time.Time   `json:"createdAt"`
 	UpdatedAt time.Time   `json:"updatedAt"`
 	UserId    uint        `json:"userId"`
@@ -14,12 +14,9 @@ type Order struct {
 }
 
 type OrderItem struct {
-	Id        uint         `json:"id"`
-	CreatedAt time.Time    `json:"createdAt"`
-	UpdatedAt time.Time    `json:"updatedAt"`
-	DeletedAt sql.NullTime `json:"deletedAt"`
-	OrderId   uint         `json:"orderId"`
-	ProductId uint         `json:"productId"`
-	Product   Product      `json:"product"`
-	Quantity  int          `json:"quantity"`
+	Id        uint    `json:"id"`
+	OrderId   uint    `json:"orderId"`
+	ProductId uint    `json:"productId"`
+	Product   Product `json:"product"`
+	Quantity  int     `json:"quantity"`
 }

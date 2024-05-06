@@ -1,4 +1,4 @@
-CREATE PROCEDURE RemoveItem_v1 (IN p_userId INT, IN p_productId INT) BEGIN
+CREATE PROCEDURE IF NOT EXISTS RemoveItem_v1 (IN p_userId INT, IN p_productId INT) BEGIN
 DELETE FROM cart_items
 WHERE
     cart_id = (

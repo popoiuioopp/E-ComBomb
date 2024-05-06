@@ -1,4 +1,4 @@
-CREATE PROCEDURE AddItem_v1 (
+CREATE PROCEDURE IF NOT EXISTS AddItem_v1 (
     IN p_cartId INT,
     IN p_productId INT,
     IN p_quantity INT

@@ -1,4 +1,4 @@
-CREATE PROCEDURE GetCartByUserId_v1 (IN p_userId INT) BEGIN DECLARE v_cartId INT DEFAULT NULL;
+CREATE PROCEDURE IF NOT EXISTS GetCartByUserId_v1 (IN p_userId INT) BEGIN DECLARE v_cartId INT DEFAULT NULL;
 
 -- First, get the cart ID to use in subsequent queries
 SELECT

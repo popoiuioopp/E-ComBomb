@@ -1,4 +1,4 @@
-CREATE PROCEDURE GetOrCreateCart_v1 (IN p_userId INT) BEGIN DECLARE v_cartId INT;
+CREATE PROCEDURE IF NOT EXISTS GetOrCreateCart_v1 (IN p_userId INT) BEGIN DECLARE v_cartId INT;
 
 SELECT
     id INTO v_cartId

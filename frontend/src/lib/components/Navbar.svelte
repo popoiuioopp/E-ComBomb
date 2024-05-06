@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import User from '$lib/assets/logos/User.svelte';
 	import Cart from '$lib/assets/logos/cart.svelte';
 
@@ -36,7 +37,13 @@
 
 	<div class="logo-container">
 		<div class="add-product">
-			<button> Add product </button>
+			<button
+				on:click={() => {
+					goto('/order');
+				}}
+			>
+				Order
+			</button>
 		</div>
 		<div class="cart-logo">
 			<a href="/cart">
