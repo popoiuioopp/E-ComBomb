@@ -43,11 +43,11 @@ func (repo *OrderRepository) CreateOrder(order *models.Order) error {
 	valueStrings := []string{}
 	valueArgs := []interface{}{}
 	for _, item := range order.Items {
-		valueStrings = append(valueStrings, "(?, ?, ?, ?, ?)")
-		valueArgs = append(valueArgs, orderId, item.ProductId, item.Quantity, item.CreatedAt, item.UpdatedAt)
+		valueStrings = append(valueStrings, "(?, ?, ?)")
+		valueArgs = append(valueArgs, orderId, item.ProductId, item.Quantity)
 	}
 
-	itemInsertQuery := fmt.Sprintf("INSERT INTO order_items (order_id, product_id, quantity, created_at, updated_at) VALUES %s",
+	itemInsertQuery := fmt.Sprintf("INSERT INTO order_items (order_id, product_id, quantity) VALUES %s",
 		strings.Join(valueStrings, ","))
 	_, err = tx.Exec(itemInsertQuery, valueArgs...)
 	if err != nil {
