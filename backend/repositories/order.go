@@ -68,6 +68,7 @@ func (repo *OrderRepository) GetAllOrders(userId int) ([]models.Order, error) {
                 o.updated_at AS order_updated_at,
                 o.deleted_at AS order_deleted_at,
                 o.user_id AS order_user_id,
+				o.status AS order_status,
                 oi.id AS item_id,
                 oi.order_id AS item_order_id,
                 oi.product_id AS item_product_id,
@@ -99,6 +100,7 @@ func (repo *OrderRepository) GetAllOrders(userId int) ([]models.Order, error) {
 		var orderId, orderUserId uint
 		var orderCreatedAt, orderUpdatedAt time.Time
 		var orderDeletedAt sql.NullTime
+		var orderStatus string
 
 		err := results.Scan(
 			&orderId,
@@ -106,6 +108,7 @@ func (repo *OrderRepository) GetAllOrders(userId int) ([]models.Order, error) {
 			&orderUpdatedAt,
 			&orderDeletedAt,
 			&orderUserId,
+			&orderStatus,
 			&orderItem.Id,
 			&orderItem.OrderId,
 			&orderItem.ProductId,
@@ -152,6 +155,7 @@ func (repo *OrderRepository) GetOrderById(userId, orderId int) (*models.Order, e
                 o.updated_at AS order_updated_at,
                 o.deleted_at AS order_deleted_at,
                 o.user_id AS order_user_id,
+				o.status AS order_status,
                 oi.id AS item_id,
                 oi.order_id AS item_order_id,
                 oi.product_id AS item_product_id,
@@ -183,6 +187,7 @@ func (repo *OrderRepository) GetOrderById(userId, orderId int) (*models.Order, e
 		var orderId, orderUserId uint
 		var orderCreatedAt, orderUpdatedAt time.Time
 		var orderDeletedAt sql.NullTime
+		var orderStatus string
 
 		err = rows.Scan(
 			&orderId,
@@ -190,6 +195,7 @@ func (repo *OrderRepository) GetOrderById(userId, orderId int) (*models.Order, e
 			&orderUpdatedAt,
 			&orderDeletedAt,
 			&orderUserId,
+			&orderStatus,
 			&orderItem.Id,
 			&orderItem.OrderId,
 			&orderItem.ProductId,
@@ -216,6 +222,7 @@ func (repo *OrderRepository) GetOrderById(userId, orderId int) (*models.Order, e
 				UpdatedAt: orderUpdatedAt,
 				UserId:    orderUserId,
 				Items:     []models.OrderItem{orderItem},
+				Status:    orderStatus,
 			}
 		}
 	}

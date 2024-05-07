@@ -16,5 +16,6 @@ export const ENDPOINTS = {
 
     // Order
     placeOder: `${API_BASE_URL}/api/order`,
-    getAllOrders: `${API_BASE_URL}/api/order`
+    getAllOrders: `${API_BASE_URL}/api/order`,
+    getOrderById: `${API_BASE_URL}/api/order`
 };
