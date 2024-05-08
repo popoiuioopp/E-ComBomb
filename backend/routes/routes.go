@@ -24,6 +24,7 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	authService := services.NewAuthService(authRepository)
 	cartService := services.NewCartService(cartRepository)
 	orderService := services.NewOrderService(orderRepository, cartRepository)
+	paymentService := services.NewPaymentService(orderRepository)
 
 	// Middleware
 	authMiddleware := middlewares.NewAuthMiddleWare(store)
@@ -34,12 +35,14 @@ func SetupRoutes(router *gin.RouterGroup, store *sessions.CookieStore, app *boot
 	productController := controllers.NewProductController(productService, store)
 	cartController := controllers.NewCartController(cartService, store)
 	orderController := controllers.NewOrderController(orderService, store)
+	paymentController := controllers.NewPaymentController(paymentService, store)
 
 	Common(router, commonController)
 	AuthRoutes(router, store, authController)
 	Product(router, store, productController, authMiddleware)
 	Cart(router, store, cartController, authMiddleware)
 	Order(router, store, orderController, authMiddleware)
+	Payment(router, store, paymentController, authMiddleware)
 }
 
 func Common(incomingRoutes *gin.RouterGroup, controller *controllers.CommonController) {
@@ -67,4 +70,8 @@ func Order(router *gin.RouterGroup, store *sessions.CookieStore, controller *con
 	router.POST("order", authMiddleware.SessionAuthMiddleware(store), controller.PlaceOrder())
 	router.GET("order", authMiddleware.SessionAuthMiddleware(store), controller.GetOrders())
 	router.GET("order/:orderId", authMiddleware.SessionAuthMiddleware(store), controller.GetOrderById())
+}
+
+func Payment(router *gin.RouterGroup, store *sessions.CookieStore, controller *controllers.PaymentController, authMiddleware *middlewares.AuthMiddleWare) {
+	router.POST("payment/checkout/:orderId", authMiddleware.SessionAuthMiddleware(store), controller.CheckoutOrder())
 }

@@ -235,3 +235,21 @@ func (repo *OrderRepository) GetOrderById(userId, orderId int) (*models.Order, e
 	// If no order was found, return nil
 	return nil, errors.New("order not found")
 }
+
+func (repo *OrderRepository) UpdateOrderStatus(userId uint, orderID int, status string) error {
+	query := `UPDATE orders SET status = ? WHERE id = ? AND user_id = ?`
+	result, err := repo.DB.Exec(query, status, orderID, userId)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rowsAffected == 0 {
+		return fmt.Errorf("no order found or user not authorized to update this order")
+	}
+
+	return nil
+}
