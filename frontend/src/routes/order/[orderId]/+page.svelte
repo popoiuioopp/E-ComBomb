@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { ENDPOINTS } from '$lib/constants/endpoints';
 	import type { Order, OrderItem } from './+page';
 
 	export let data;
@@ -6,9 +8,22 @@
 	const getTotalPrice = (items: OrderItem[]): number => {
 		let total: number = 0;
 		for (let item of items) {
-			total += item.product.price;
+			total += item.product.price * item.quantity;
 		}
 		return total;
+	};
+
+	const onCheckout = async () => {
+		const response = await fetch(`${ENDPOINTS.checkoutByOrderId}/${order.id}`, {
+			method: 'POST',
+			credentials: 'include'
+		});
+
+		if (!response.ok) {
+			throw new Error('Failed to remove item from cart');
+		}
+
+		goto(`/order/${order.id}`);
 	};
 </script>
 
@@ -35,6 +50,8 @@
 			</li>
 		{/each}
 	</ul>
+
+	<button on:click={() => onCheckout()}> Order Now </button>
 {:else}
 	<p>Loading order details...</p>
 {/if}

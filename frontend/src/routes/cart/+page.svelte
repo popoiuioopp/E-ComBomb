@@ -40,7 +40,7 @@
 			}
 
 			cart = await response.json();
-			cartItems = cart.Items;
+			cartItems = cart.items;
 		} catch (error) {
 			console.error('Error fetching cart items:', error);
 		}
