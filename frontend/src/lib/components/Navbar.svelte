@@ -2,14 +2,42 @@
 	import { goto } from '$app/navigation';
 	import User from '$lib/assets/logos/User.svelte';
 	import Cart from '$lib/assets/logos/cart.svelte';
+	import { onDestroy } from 'svelte';
+	import { authStore, logout } from '$lib/store';
+	import { Roles } from '$lib/constants/roles';
 
 	let showDropdown = false;
+	let showRoleDropdown = false;
+
+	// Subscribe to the authStore
+	let isLoggedIn = false;
+	let userRole = 'Guest';
+
+	const unsubscribe = authStore.subscribe(($authStore) => {
+		isLoggedIn = $authStore.isLoggedIn;
+		userRole = $authStore.userRole;
+	});
+
+	onDestroy(() => {
+		unsubscribe();
+	});
 
 	function toggleDropdown() {
 		showDropdown = !showDropdown;
 	}
 
+	function toggleRoleDropdown() {
+		showRoleDropdown = !showRoleDropdown;
+	}
+
 	function handleClickOutside() {
+		showDropdown = false;
+		showRoleDropdown = false;
+	}
+
+	function changeRole(role: Roles) {
+		authStore.set({ userRole: role, isLoggedIn: true }); // Update role in the store
+		showRoleDropdown = false;
 		showDropdown = false;
 	}
 
@@ -30,26 +58,28 @@
 			}
 		};
 	}
+
+	function handleLogout() {
+		logout();
+		goto('/');
+	}
 </script>
 
 <div class="navbar">
 	<a href="/" class="brand">E-Combomb</a>
 
 	<div class="logo-container">
-		<div class="add-product">
-			<button
-				on:click={() => {
-					goto('/order');
-				}}
-			>
-				Order
-			</button>
-		</div>
-		<div class="cart-logo">
-			<a href="/cart">
-				<svelte:component this={Cart} />
-			</a>
-		</div>
+		{#if isLoggedIn}
+			<div class="navbar-button">
+				<button on:click={() => goto('/order')}> Order </button>
+			</div>
+
+			<div class="cart-logo">
+				<a href="/cart">
+					<svelte:component this={Cart} />
+				</a>
+			</div>
+		{/if}
 
 		<div class="user-logo-container" use:clickOutside>
 			<button
@@ -64,8 +94,20 @@
 			</button>
 			{#if showDropdown}
 				<div class="dropdown-menu" role="menu">
-					<a href="/login" role="menuitem">Login</a>
-					<a href="/register" role="menuitem">Register</a>
+					{#if !isLoggedIn}
+						<a href="/login" role="menuitem">Login</a>
+						<a href="/register" role="menuitem">Register</a>
+					{:else}
+						<button on:click={handleLogout}>Logout</button>
+						<button on:click={toggleRoleDropdown}>Change Role</button>
+					{/if}
+					{#if showRoleDropdown}
+						<div class="role-dropdown-menu">
+							<button on:click={() => changeRole(Roles.Buyer)}>Buyer</button>
+							<button on:click={() => changeRole(Roles.Seller)}>Seller</button>
+							<button on:click={() => changeRole(Roles.Delivery)}>Delivery</button>
+						</div>
+					{/if}
 				</div>
 			{/if}
 		</div>
@@ -139,7 +181,7 @@
 		cursor: pointer;
 	}
 
-	.navbar .add-product button {
+	.navbar .navbar-button button {
 		padding: 10px 20px;
 		border: none;
 		border-radius: 5px;
@@ -147,5 +189,28 @@
 		font-weight: bold;
 		text-transform: uppercase;
 		transition: background-color 0.3s ease;
+	}
+
+	.role-dropdown-menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		background-color: white;
+		box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+		z-index: 2;
+	}
+
+	.role-dropdown-menu button {
+		display: block;
+		width: 100%;
+		padding: 8px;
+		text-align: left;
+		border: none;
+		background: none;
+		cursor: pointer;
+	}
+
+	.role-dropdown-menu button:hover {
+		background-color: #f1f1f1;
 	}
 </style>

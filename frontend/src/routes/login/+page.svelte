@@ -3,6 +3,8 @@
 	import { goto } from '$app/navigation';
 	import { onDestroy, onMount } from 'svelte';
 	import { setBackgroundColor } from 'utils/backgroundUtils';
+	import { login } from '$lib/store';
+	import { Roles } from '$lib/constants/roles';
 
 	let username = '';
 	let password = '';
@@ -25,6 +27,8 @@
 			if (!response.ok) {
 				throw new Error(await response.text());
 			}
+
+			login(Roles.Buyer);
 
 			goto('/');
 		} catch (error) {
